@@ -5,8 +5,8 @@ import { BsFillHouseDoorFill } from "react-icons/bs";
 export default function Header1() {
   return (
     <header className='container-fluid bg-warning'>      
-      {/* <img src='/Stoc.png' alt='Stoc' /> */}
-      <div className='container p-2'>        
+<img src='/Stoc.png' alt='Stoc' height='75' width='125' />
+<div className='container p-2'>        
         <div className='row align-items-center'>
           <div className='logo col-auto'>
             <h2>Stoc</h2>
