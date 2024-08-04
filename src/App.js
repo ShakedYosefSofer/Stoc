@@ -8,7 +8,7 @@ import Page404 from "./pages/Page404";
 import CounterPage from "./pages/CounterPage";
 import ContextProvider from "./context/Context";
 import ShopPage from "./pages/ShopPage";
-import StudentPage from "./pages/StudentPage";
+import JobPage from "./pages/JobPage";
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import HeaderAdmin from "./components/admin/HeaderAdmin";
 import UsersAdmin from "./pages/admin/UsersAdmin";
@@ -44,7 +44,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/counter" element={<CounterPage />} />
           <Route path="/shop" element={<ShopPage />} />
-          <Route path="/student" element={<StudentPage  />} />
+          <Route path="/student" element={<JobPage  />} />
           <Route path="/form1" element={<Form1 />} />
           <Route path="/icons" element={<Icons />} />
           <Route path="/map" element={<MapPage />} />

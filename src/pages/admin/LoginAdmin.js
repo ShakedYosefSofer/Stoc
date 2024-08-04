@@ -45,7 +45,7 @@ export default function LoginAdmin() {
 
   return (
     <div className='container'>
-      <h1>Log in form</h1>
+      <h1>Login to admin</h1>
       <form onSubmit={onSub} className='col-md-6 p-2'>
         <label>Email:</label>
         <input ref={emailRef} type="email" className='form-control' />

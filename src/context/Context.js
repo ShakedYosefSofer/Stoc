@@ -1,116 +1,128 @@
 import { createContext, useLayoutEffect, useState } from "react";
+
 export const AppContext = createContext(null);
 
-export default function ContextProvider(props){
-  const [counter,setCounter] = useState(99);
-  const [showEdit,setShowEdit] = useState(false)
-  const [currentEditItem,setCurrentEdit] = useState({})
-  
-  const [currentEditItems,setCurrentEdits] = useState({})
-  const [showEditStudents,setShowStudentEdits] = useState(false)
+export default function ContextProvider(props) {
+  const [counter, setCounter] = useState(99);
+  const [showEdit, setShowEdit] = useState(false);
+  const [currentEditItem, setCurrentEdit] = useState({});
+  const [currentEditItems, setCurrentEdits] = useState({});
+  const [showEditStudents, setShowStudentEdits] = useState(false);
+  const [showEditJobs, setShowJobEdits] = useState(false);
 
-  const [shop_ar,setShopAr] = useState([
-    {name:"milk",amount:4,id:1},
-    {name:"bamba",amount:2,id:2},
-    {name:"shoko",amount:6,id:3},
-  ]);
+  const [shop_ar, setShopAr] = useState([]);
+  const [student_ar, setStudentAr] = useState([]);
+  const [job_ar, setJobAr] = useState([]);
 
- 
-  // useEffect - כמו יוז אפקט אבל פועל לפני הרנדור של הקומפונינטה
   useLayoutEffect(() => {
-    // בודקים אם יש מידע שנשמר בלוקאל ואם כן נחזיר אותו למערך
-    if(localStorage.getItem("shop_ar")){
-      setShopAr(JSON.parse(localStorage.getItem("shop_ar")))
+    // Reading data from LocalStorage
+    const storedShopAr = localStorage.getItem("shop_ar");
+    if (storedShopAr) {
+      setShopAr(JSON.parse(storedShopAr));
     }
-  },[])
+    
+    const storedStudentAr = localStorage.getItem("student_ar");
+    if (storedStudentAr) {
+      setStudentAr(JSON.parse(storedStudentAr));
+    }
 
+    const storedJobAr = localStorage.getItem("job_ar");
+    if (storedJobAr) {
+      setJobAr(JSON.parse(storedJobAr));
+    }
+  }, []);
+
+  // Functions for products
   const addProduct = (newItem) => {
-    setShopAr([...shop_ar,newItem]);
-    // stringify - מכיוון שאנחנו רוצים לשמור ג'ייסון ולוקאל יודע
-    // לעבוד רק עם סטרינג אנחנו חייבים להמיר אותו לסטרינג
-    localStorage.setItem("shop_ar",JSON.stringify([...shop_ar,newItem]))
-  }
+    const updatedShopAr = [...shop_ar, newItem];
+    setShopAr(updatedShopAr);
+    localStorage.setItem("shop_ar", JSON.stringify(updatedShopAr));
+  };
 
   const resetAllProducts = () => {
     setShopAr([]);
-    localStorage.setItem("shop_ar",JSON.stringify([]))
-  }
+    localStorage.setItem("shop_ar", JSON.stringify([]));
+  };
 
   const deleteProduct = (del_id) => {
-    const filter_ar = shop_ar.filter(item => item.id != del_id)
-    setShopAr(filter_ar);
-    localStorage.setItem("shop_ar",JSON.stringify(filter_ar))
-  }
+    const updatedShopAr = shop_ar.filter(item => item.id !== del_id);
+    setShopAr(updatedShopAr);
+    localStorage.setItem("shop_ar", JSON.stringify(updatedShopAr));
+  };
 
   const updateProduct = (updateItem) => {
-    const map_ar = shop_ar.map((item) => {
-      if(item.id == updateItem.id){
-        item = updateItem
-      }
-      return item;
-    }) 
-    setShopAr(map_ar)
-    localStorage.setItem("shop_ar",JSON.stringify(map_ar))
-  }
+    const updatedShopAr = shop_ar.map(item =>
+      item.id === updateItem.id ? updateItem : item
+    );
+    setShopAr(updatedShopAr);
+    localStorage.setItem("shop_ar", JSON.stringify(updatedShopAr));
+  };
 
-  const [student_ar,setStudentAr] = useState([
-    {name:"Moshe",grade:40,id:1},
-    {name:"Avi",grade:92,id:2},
-    {name:"Anonimus",grade:60,id:3},
-  ]);
-
-  useLayoutEffect(() => {
-    // בודקים אם יש מידע שנשמר בלוקאל ואם כן נחזיר אותו למערך
-    if(localStorage.getItem("student_ar")){
-      setStudentAr(JSON.parse(localStorage.getItem("student_ar")))
-    }
-  },[])
-
+  // Functions for students
   const addStudent = (newItem) => {
-    setStudentAr([...student_ar,newItem]);
-      // stringify - מכיוון שאנחנו רוצים לשמור ג'ייסון ולוקאל יודע
-    // לעבוד רק עם סטרינג אנחנו חייבים להמיר אותו לסטרינג
-    localStorage.setItem("student_ar",JSON.stringify([...student_ar,newItem]))
-  }
+    const updatedStudentAr = [...student_ar, newItem];
+    setStudentAr(updatedStudentAr);
+    localStorage.setItem("student_ar", JSON.stringify(updatedStudentAr));
+  };
 
   const resetAllStudent = () => {
     setStudentAr([]);
-    localStorage.setItem("student_ar",JSON.stringify([]))
+    localStorage.setItem("student_ar", JSON.stringify([]));
+  };
 
-  }
-
- 
   const deleteStudent = (del_id) => {
-    const filter_ar = student_ar.filter(item => item.id != del_id)
-    setStudentAr(filter_ar);
-    localStorage.setItem("student_ar",JSON.stringify(filter_ar))
-  }
-  
+    const updatedStudentAr = student_ar.filter(item => item.id !== del_id);
+    setStudentAr(updatedStudentAr);
+    localStorage.setItem("student_ar", JSON.stringify(updatedStudentAr));
+  };
+
   const updateStudent = (updateStudent) => {
-    const map_ar = student_ar.map((item) => {
-      if(item.id == updateStudent.id){
-        item = updateStudent
-      }
-      return item;
-    }) 
-    setStudentAr(map_ar)
-    localStorage.setItem("student_ar",JSON.stringify(map_ar))
-  }
+    const updatedStudentAr = student_ar.map(item =>
+      item.id === updateStudent.id ? updateStudent : item
+    );
+    setStudentAr(updatedStudentAr);
+    localStorage.setItem("student_ar", JSON.stringify(updatedStudentAr));
+  };
+
+  // Functions for jobs
+  const addJob = (newItem) => {
+    const updatedJobAr = [...job_ar, newItem];
+    setJobAr(updatedJobAr);
+    localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
+  };
+
+  const resetAllJobs = () => {
+    setJobAr([]);
+    localStorage.setItem("job_ar", JSON.stringify([]));
+  };
+
+  const deleteJob = (del_id) => {
+    const updatedJobAr = job_ar.filter(item => item.id !== del_id);
+    setJobAr(updatedJobAr);
+    localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
+  };
+
+  const updateJob = (updateJob) => {
+    const updatedJobAr = job_ar.map(item =>
+      item.id === updateJob.id ? updateJob : item
+    );
+    setJobAr(updatedJobAr);
+    localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
+  };
 
   const globalValue = {
-    counter,setCounter,
-    shop_ar,addProduct,resetAllProducts,deleteProduct,
-    showEdit,setShowEdit,currentEditItem,setCurrentEdit,updateProduct,
-        student_ar,addStudent,resetAllStudent,deleteStudent,
-    showEditStudents,setShowStudentEdits,currentEditItems,setCurrentEdits,updateStudent
+    counter, setCounter,
+    shop_ar, addProduct, resetAllProducts, deleteProduct, updateProduct,
+    showEdit, setShowEdit, currentEditItem, setCurrentEdit,
+    student_ar, addStudent, resetAllStudent, deleteStudent, updateStudent,
+    showEditStudents, setShowStudentEdits, currentEditItems, setCurrentEdits,
+    job_ar, addJob, resetAllJobs, deleteJob, updateJob,
+    showEditJobs, setShowJobEdits
+  };
 
-  }
-    // Value - כל מה שיהיה מהמאפיין שנעביר לווליו
-  // יהפוך להיות גלובלי לכל הקומפנינטת ש
-  // APPCONTEXT PROVIDER עוטף
   return (
-    <AppContext.Provider value={globalValue} >
+    <AppContext.Provider value={globalValue}>
       {props.children}
     </AppContext.Provider>
-  )
+  );
 }
