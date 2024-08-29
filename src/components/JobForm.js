@@ -1,6 +1,24 @@
 import React, { useState, useContext } from 'react';
+import Select from 'react-select';
 import { AppContext } from '../context/Context';
 import '../css/job.css';
+
+const jobOptions = [
+  { value: 'developer', label: 'Developer' },
+  { value: 'devops', label: 'DevOps' },
+  { value: 'qa', label: 'QA' },
+  { value: 'designer', label: 'Designer' },
+  // Add more job titles as needed
+];
+
+const locationOptions = [
+  { value: 'tel_aviv', label: 'Tel Aviv' },
+  { value: 'jerusalem', label: 'Jerusalem' },
+  { value: 'haifa', label: 'Haifa' },
+  { value: 'beer_sheva', label: 'Beer Sheva' },
+  { value: 'netanya', label: 'Netanya' },
+  // Add more locations as needed
+];
 
 export default function JobForm() {
   const [jobTitle, setJobTitle] = useState("");
@@ -32,10 +50,10 @@ export default function JobForm() {
       <form onSubmit={onJobSubmit}>
         <div className='form-group'>
           <label>Job Title:</label>
-          <input
-            onChange={(e) => setJobTitle(e.target.value)}
-            value={jobTitle}
-            type="text"
+          <Select
+            options={jobOptions}
+            onChange={(option) => setJobTitle(option ? option.value : '')}
+            value={jobOptions.find(option => option.value === jobTitle)}
             className='form-control'
           />
         </div>
@@ -49,10 +67,10 @@ export default function JobForm() {
         </div>
         <div className='form-group'>
           <label>Location:</label>
-          <input
-            onChange={(e) => setJobLocation(e.target.value)}
-            value={jobLocation}
-            type="text"
+          <Select
+            options={locationOptions}
+            onChange={(option) => setJobLocation(option ? option.value : '')}
+            value={locationOptions.find(option => option.value === jobLocation)}
             className='form-control'
           />
         </div>
