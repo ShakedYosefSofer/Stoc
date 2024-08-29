@@ -33,8 +33,11 @@ export default function HeaderAdmin() {
           <nav className='col d-md-flex justify-content-between align-items-center'>
             <ul>
               <li><Link to="/admin/users">Users</Link></li>
+              <li><Link to="/Admin/JobFormA">add job</Link></li>
+              <li><Link to="/admin/Jobs">Jobs</Link></li>
               <li><Link to="/admin/categories">Categories</Link></li>
               <li><Link to="/admin/toys">Toys</Link></li>
+
            
             </ul>
             <div>

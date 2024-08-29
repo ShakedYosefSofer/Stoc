@@ -9,9 +9,13 @@ import CounterPage from "./pages/CounterPage";
 import ContextProvider from "./context/Context";
 import ShopPage from "./pages/ShopPage";
 import JobPage from "./pages/JobPage";
+// import JobPage from "./pages/admin/JobPage";
+import JobFormA from './pages/JobFormA';
+// import JobListPage from './pages/JobListPage';
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import HeaderAdmin from "./components/admin/HeaderAdmin";
 import UsersAdmin from "./pages/admin/UsersAdmin";
+// import JobFormAdmin from "./pages/admin/JobFormAdmin";
 import Pixa from "./pages/Pixa";
 import Form1 from "./pages/Form1";
 import Graph1 from "./pages/Graph1";
@@ -45,6 +49,8 @@ function App() {
           <Route path="/counter" element={<CounterPage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/student" element={<JobPage  />} />
+          {/* <Route path="/JobFormA" element={<JobFormA  />} /> */}
+
           <Route path="/form1" element={<Form1 />} />
           <Route path="/icons" element={<Icons />} />
           <Route path="/map" element={<MapPage />} />
@@ -57,6 +63,9 @@ function App() {
           <Route path="/admin/categories/add" element={<AddCategory />} />
           <Route path="/admin/toys" element={<ToysAdmin />} />
           <Route path="/admin/toys/add" element={<AddToys />} />
+          <Route path="/admin/JobFormA" element={<JobFormA  />} />
+          <Route path="/admin/Jobs" element={<JobPage  />} />
+
           <Route path="/pixa" element={<Pixa />} />
           <Route path="/graph1" element={<Graph1 />} />
           <Route path="/graph2" element={<Graph2 />} />

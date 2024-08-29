@@ -12,7 +12,7 @@ export default function JobList() {
 
   return (
     <div className='job-list-container'>
-      <h2>Job Listings</h2>
+      <h2>List of jobs</h2>
       <div className='job-list'>
         {job_ar.map(item => (
           <JobItem key={item.id} item={item} />

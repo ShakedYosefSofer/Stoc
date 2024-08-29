@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import JobList from '../components/JobList';
-import JobEdit from '../components/JobEdit';
+import JobForm from '../components/JobForm';
 import { AppContext } from '../context/Context';
 import '../css/job.css';
 
@@ -9,9 +8,8 @@ export default function JobPage() {
 
   return (
     <div className='job-page'>
-      {showEditJobs && <JobEdit />}
-         <br />
-        <JobList />
+        <br />
+        <JobForm />  
     </div>
   );
 }

@@ -7,7 +7,7 @@ export default function JobForm() {
   const [jobDescription, setJobDescription] = useState("");
   const [jobLocation, setJobLocation] = useState("");
 
-  const { job_ar, addJob, resetAllJobs } = useContext(AppContext);
+  const { addJob, resetAllJobs } = useContext(AppContext);
 
   const onJobSubmit = (e) => {
     e.preventDefault();
@@ -15,13 +15,16 @@ export default function JobForm() {
       title: jobTitle,
       description: jobDescription,
       location: jobLocation,
-      id: Date.now()
+      id: Date.now(),
     };
     addJob(newJob);
     setJobTitle("");
     setJobDescription("");
     setJobLocation("");
   };
+
+  // Check if any field is empty
+  const isFormIncomplete = !jobTitle || !jobDescription || !jobLocation;
 
   return (
     <div className='job-form-container'>
@@ -54,7 +57,13 @@ export default function JobForm() {
           />
         </div>
         <div className='button-group'>
-          <button type='submit' className='btn btn-primary'>Add Job</button>
+          <button
+            type='submit'
+            className='btn btn-primary'
+            disabled={isFormIncomplete} // Disable the button if the form is incomplete
+          >
+            Add Job
+          </button>
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to delete all jobs?")) {
