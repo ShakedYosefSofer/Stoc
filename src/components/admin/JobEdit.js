@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AppContext } from '../context/Context';
-import '../css/job.css';
+import { AppContext } from '../../context/Context';
+import '../../css/job.css';
 
 export default function JobEdit() {
   const { setShowJobEdits, currentEditJob, updateJob } = useContext(AppContext);

@@ -5,13 +5,10 @@ import Header1 from "./components/Header1";
 import Page404 from "./pages/Page404";
 import ContextProvider from "./context/Context";
 import JobPage from "./pages/JobPage";
-// import JobPage from "./pages/admin/JobPage";
-import JobFormA from './pages/JobFormA';
-// import JobListPage from './pages/JobListPage';
+import JobFormA from './pages/admin/JobFormA';
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import HeaderAdmin from "./components/admin/HeaderAdmin";
 import UsersAdmin from "./pages/admin/UsersAdmin";
-// import JobFormAdmin from "./pages/admin/JobFormAdmin";
 import FormSignUp from "./pages/FormSignUp";
 import CategoriesAdmin1 from "./pages/admin/CategoriesAdmin1";
 import AddCategory from "./pages/admin/AddCategory";
@@ -31,7 +28,7 @@ function App() {
           <Route path="*" element={<Header1 />} />
         </Routes>
         <Routes>
-          <Route path="/student" element={<JobPage  />} />
+          <Route path="/JobPage" element={<JobPage  />} />
           {/* <Route path="/JobFormA" element={<JobFormA  />} /> */}
 
           <Route path="/FormSignUp" element={<FormSignUp />} />

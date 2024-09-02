@@ -15,15 +15,9 @@ export default function Header1() {
             <ul>
          
        
-              <li><Link to="/student">Jobs</Link></li>
-
-
-            
-
-              <li><Link to="/Admin">Admin</Link></li>
-
-   
+              <li><Link to="/JobPage">Jobs</Link></li>
               <li><Link to="/FormSignUp">SignUp</Link></li>
+              <li><Link to="/Admin">Admin</Link></li>
               <li className='home-icon' ><Link to="/student"><BsFillHouseDoorFill /> </Link></li>
 
             </ul>

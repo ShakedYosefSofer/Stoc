@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import { AppContext } from '../context/Context';
+import { AppContext } from '../../context/Context';
 import JobItem from './JobItem';
-import '../css/job.css';
-import JobEdit from '../components/JobEdit';
+import '../../css/job.css';
+import JobEdit from './JobEdit';
 
 export default function JobList() {
   const { job_ar, fetchJobs, showJobEdits, currentEditJob } = useContext(AppContext);
