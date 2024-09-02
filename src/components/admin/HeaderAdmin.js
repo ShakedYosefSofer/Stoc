@@ -36,7 +36,6 @@ export default function HeaderAdmin() {
               <li><Link to="/Admin/JobFormA">add job</Link></li>
               <li><Link to="/admin/Jobs">Jobs</Link></li>
               <li><Link to="/admin/categories">Categories</Link></li>
-              <li><Link to="/admin/toys">Toys</Link></li>
 
            
             </ul>
