@@ -1,123 +1,83 @@
-import { createContext, useLayoutEffect, useState } from "react";
+import React, { createContext, useLayoutEffect, useState } from "react";
+import axios from 'axios';
+import { API_URL } from '../services/apiService'; // ודא שהנתיב הזה נכון
 
 export const AppContext = createContext(null);
 
 export default function ContextProvider(props) {
-  const [counter, setCounter] = useState(99);
-  const [showEdit, setShowEdit] = useState(false);
-  const [currentEditItem, setCurrentEdit] = useState({});
-  const [currentEditItems, setCurrentEdits] = useState({});
-  const [showEditStudents, setShowStudentEdits] = useState(false);
-  const [showEditJobs, setShowJobEdits] = useState(false);
-
-  const [shop_ar, setShopAr] = useState([]);
-  const [student_ar, setStudentAr] = useState([]);
   const [job_ar, setJobAr] = useState([]);
+  const [showJobEdits, setShowJobEdits] = useState(false);
+  const [currentEditJob, setCurrentEditJob] = useState({});
+
+  // פונקציה לטעינת עבודות מהשרת
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/jobs`);
+      setJobAr(response.data);
+      localStorage.setItem("job_ar", JSON.stringify(response.data));
+    } catch (err) {
+      console.error('שגיאה בזמן קבלת העבודות:', err);
+    }
+  };
 
   useLayoutEffect(() => {
-    // Reading data from LocalStorage
-    const storedShopAr = localStorage.getItem("shop_ar");
-    if (storedShopAr) {
-      setShopAr(JSON.parse(storedShopAr));
-    }
-    
-    const storedStudentAr = localStorage.getItem("student_ar");
-    if (storedStudentAr) {
-      setStudentAr(JSON.parse(storedStudentAr));
-    }
-
+    // קריאה לLocalStorage אם יש נתונים זמינים
     const storedJobAr = localStorage.getItem("job_ar");
     if (storedJobAr) {
       setJobAr(JSON.parse(storedJobAr));
+    } else {
+      fetchJobs(); // קרא ל-fetchJobs אם אין נתונים ב-localStorage
     }
   }, []);
 
-  // Functions for products
-  const addProduct = (newItem) => {
-    const updatedShopAr = [...shop_ar, newItem];
-    setShopAr(updatedShopAr);
-    localStorage.setItem("shop_ar", JSON.stringify(updatedShopAr));
-  };
-
-  const resetAllProducts = () => {
-    setShopAr([]);
-    localStorage.setItem("shop_ar", JSON.stringify([]));
-  };
-
-  const deleteProduct = (del_id) => {
-    const updatedShopAr = shop_ar.filter(item => item.id !== del_id);
-    setShopAr(updatedShopAr);
-    localStorage.setItem("shop_ar", JSON.stringify(updatedShopAr));
-  };
-
-  const updateProduct = (updateItem) => {
-    const updatedShopAr = shop_ar.map(item =>
-      item.id === updateItem.id ? updateItem : item
-    );
-    setShopAr(updatedShopAr);
-    localStorage.setItem("shop_ar", JSON.stringify(updatedShopAr));
-  };
-
-  // Functions for students
-  const addStudent = (newItem) => {
-    const updatedStudentAr = [...student_ar, newItem];
-    setStudentAr(updatedStudentAr);
-    localStorage.setItem("student_ar", JSON.stringify(updatedStudentAr));
-  };
-
-  const resetAllStudent = () => {
-    setStudentAr([]);
-    localStorage.setItem("student_ar", JSON.stringify([]));
-  };
-
-  const deleteStudent = (del_id) => {
-    const updatedStudentAr = student_ar.filter(item => item.id !== del_id);
-    setStudentAr(updatedStudentAr);
-    localStorage.setItem("student_ar", JSON.stringify(updatedStudentAr));
-  };
-
-  const updateStudent = (updateStudent) => {
-    const updatedStudentAr = student_ar.map(item =>
-      item.id === updateStudent.id ? updateStudent : item
-    );
-    setStudentAr(updatedStudentAr);
-    localStorage.setItem("student_ar", JSON.stringify(updatedStudentAr));
-  };
-
-  // Functions for jobs
   const addJob = (newItem) => {
     const updatedJobAr = [...job_ar, newItem];
     setJobAr(updatedJobAr);
     localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
   };
 
-  const resetAllJobs = () => {
-    setJobAr([]);
-    localStorage.setItem("job_ar", JSON.stringify([]));
+  // const resetAllJobs = () => {
+  //   setJobAr([]);
+  //   localStorage.setItem("job_ar", JSON.stringify([]));
+  // };
+
+  const deleteJob = async (del_id) => {
+    try {
+      await axios.delete(`${API_URL}/jobs/${del_id}`); // מחיקת עבודה מהשרת
+      const updatedJobAr = job_ar.filter(item => item._id !== del_id);
+      setJobAr(updatedJobAr);
+      localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
+    } catch (err) {
+      console.error('שגיאה בזמן מחיקת העבודה:', err);
+    }
   };
 
-  const deleteJob = (del_id) => {
-    const updatedJobAr = job_ar.filter(item => item.id !== del_id);
-    setJobAr(updatedJobAr);
-    localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
+  
+  const updateJob = async (jobId, bodyData) => {
+    if (!jobId) {
+      throw new Error("Job ID is not defined");
+    }
+  
+    try {
+      const url = `${API_URL}/jobs/${jobId}`;
+      axios.defaults.withCredentials = true;
+      const { data } = await axios.put(url, bodyData);
+      return data;
+    } catch (err) {
+      console.error(`Error updating job: ${err.message}`);
+      throw err;
+    }
   };
-
-  const updateJob = (updateJob) => {
-    const updatedJobAr = job_ar.map(item =>
-      item.id === updateJob.id ? updateJob : item
-    );
-    setJobAr(updatedJobAr);
-    localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
-  };
+  
+  
+  
+  
 
   const globalValue = {
-    counter, setCounter,
-    shop_ar, addProduct, resetAllProducts, deleteProduct, updateProduct,
-    showEdit, setShowEdit, currentEditItem, setCurrentEdit,
-    student_ar, addStudent, resetAllStudent, deleteStudent, updateStudent,
-    showEditStudents, setShowStudentEdits, currentEditItems, setCurrentEdits,
-    job_ar, addJob, resetAllJobs, deleteJob, updateJob,
-    showEditJobs, setShowJobEdits
+    job_ar, fetchJobs,
+    // resetAllJobs
+    addJob, deleteJob, updateJob,
+    showJobEdits, setShowJobEdits, currentEditJob, setCurrentEditJob
   };
 
   return (

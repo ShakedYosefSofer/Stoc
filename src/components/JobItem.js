@@ -4,7 +4,7 @@ import { AppContext } from '../context/Context';
 import '../css/job.css';
 
 export default function JobItem({ item }) {
-  const { deleteJob, setShowJobEdits, setCurrentEdits } = useContext(AppContext);
+  const { deleteJob, setShowJobEdits, setCurrentEditJob } = useContext(AppContext);
   const location = useLocation(); // Get the current URL
 
   // Check if the current URL matches the admin URL
@@ -21,9 +21,9 @@ export default function JobItem({ item }) {
         <div className='job-item-actions'>
           <button className='btn btn-primary' onClick={() => {
             setShowJobEdits(true);
-            setCurrentEdits(item);
+            setCurrentEditJob(item);
           }}>Edit</button>
-          <button className='btn btn-danger' onClick={() => deleteJob(item.id)}>Delete</button>
+          <button className='btn btn-danger' onClick={() => deleteJob(item._id)}>Delete</button>
         </div>
       )}
     </div>

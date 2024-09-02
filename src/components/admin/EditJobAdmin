@@ -1,0 +1,65 @@
+import React, { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { AppContext } from '../context/Context';
+import '../css/editPopup.css';
+
+export default function EditJobAdmin({ setShowJobEdits, currentEditJob }) {
+  const { updateJob } = useContext(AppContext);
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      title: currentEditJob.title || '',
+      description: currentEditJob.description || '',
+      location: currentEditJob.location || ''
+    }
+  });
+
+  const onSubmit = async (bodyData) => {
+    try {
+      await updateJob({ ...currentEditJob, ...bodyData });
+      setShowJobEdits(false);
+    } catch (err) {
+      console.error('Error updating job:', err);
+    }
+  };
+
+  return (
+    <div className='popup_window'>
+      <div className='popup_window_inside'>
+        <h2>Update Job</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className='form'>
+          <label>Job Title</label>
+          <input
+            {...register('title', { required: true, minLength: 2 })}
+            className="form-control"
+            type="text"
+          />
+          {errors.title && <div className="text-danger">* Enter a valid job title</div>}
+          
+          <label>Job Description</label>
+          <textarea
+            {...register('description', { required: true, minLength: 5 })}
+            className="form-control"
+          />
+          {errors.description && <div className="text-danger">* Enter a valid description (min 5 characters)</div>}
+          
+          <label>Location</label>
+          <input
+            {...register('location', { required: true })}
+            className="form-control"
+            type="text"
+          />
+          {errors.location && <div className="text-danger">* Enter a valid location</div>}
+          
+          <button className='btn btn-info mt-4'>Update</button>
+          <button
+            onClick={() => setShowJobEdits(false)}
+            type="button"
+            className='btn btn-danger ms-2 mt-4'
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

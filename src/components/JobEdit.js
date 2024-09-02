@@ -1,24 +1,41 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AppContext } from '../context/Context';
 import '../css/job.css';
 
 export default function JobEdit() {
-  const { setShowJobEdits, currentEditItems, updateJob } = useContext(AppContext);
-  const [jobTitle, setJobTitle] = useState(currentEditItems.title);
-  const [jobDescription, setJobDescription] = useState(currentEditItems.description);
-  const [jobLocation, setJobLocation] = useState(currentEditItems.location);
+  const { setShowJobEdits, currentEditJob, updateJob } = useContext(AppContext);
+
+  // If currentEditJob is undefined or null, initialize state with empty values
+  const [jobTitle, setJobTitle] = useState(currentEditJob?.title || '');
+  const [jobDescription, setJobDescription] = useState(currentEditJob?.description || '');
+  const [jobLocation, setJobLocation] = useState(currentEditJob?.location || '');
+
+  // Update state if currentEditJob changes
+  useEffect(() => {
+    setJobTitle(currentEditJob?.title || '');
+    setJobDescription(currentEditJob?.description || '');
+    setJobLocation(currentEditJob?.location || '');
+  }, [currentEditJob]);
 
   const onSub = (e) => {
+    
     e.preventDefault();
     const updateItem = {
       title: jobTitle,
       description: jobDescription,
       location: jobLocation,
-      id: currentEditItems.id
+      _id: currentEditJob?._id // Ensure you use the correct identifier
     };
     updateJob(updateItem);
     setShowJobEdits(false);
   };
+  
+
+  
+
+  if (!currentEditJob) {
+    return null; // Or render some loading message if desired
+  }
 
   return (
     <div className='job-edit-overlay'>

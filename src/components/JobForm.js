@@ -1,6 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-import { AppContext } from '../context/Context';
+import { API_URL } from '../services/apiService'; // Ensure this path is correct
 import '../css/job.css';
 
 const jobOptions = [
@@ -8,93 +11,102 @@ const jobOptions = [
   { value: 'devops', label: 'DevOps' },
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
-  // Add more job titles as needed
 ];
 
 const locationOptions = [
   { value: 'tel_aviv', label: 'Tel Aviv' },
   { value: 'jerusalem', label: 'Jerusalem' },
   { value: 'haifa', label: 'Haifa' },
-  { value: 'beer_sheva', label: 'Beer Sheva' },
+  { value: 'beer sheva', label: 'Beer Sheva' },
   { value: 'netanya', label: 'Netanya' },
-  // Add more locations as needed
 ];
 
-export default function JobForm() {
-  const [jobTitle, setJobTitle] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [jobLocation, setJobLocation] = useState("");
+const JobForm = () => {
+  const { register, handleSubmit, control, formState: { errors } } = useForm();
+  const navigate = useNavigate();
 
-  const { addJob, resetAllJobs } = useContext(AppContext);
-
-  const onJobSubmit = (e) => {
-    e.preventDefault();
-    const newJob = {
-      title: jobTitle,
-      description: jobDescription,
-      location: jobLocation,
-      id: Date.now(),
+  const onSubmit = async (data) => {
+    const bodyData = {
+      title: data.title ? data.title.value : '',
+      description: data.description,
+      location: data.location ? data.location.value : ''
     };
-    addJob(newJob);
-    setJobTitle("");
-    setJobDescription("");
-    setJobLocation("");
+
+    try {
+      const url = `${API_URL}/jobs`;
+      axios.defaults.withCredentials = true;
+      const response = await axios.post(url, bodyData);
+      if (response.data._id) {
+        alert('New job added successfully');
+      }
+    } catch (err) {
+      console.error('Error adding job:', err.response ? err.response.data : err.message);
+      alert(`Error adding job: ${err.response ? err.response.data.error : err.message}`);
+    }
   };
 
-  // Check if any field is empty
-  const isFormIncomplete = !jobTitle || !jobDescription || !jobLocation;
-
   return (
-    <div className='job-form-container'>
+    <div className="job-form-container">
       <h2>Add New Job</h2>
-      <form onSubmit={onJobSubmit}>
-        <div className='form-group'>
-          <label>Job Title:</label>
-          <Select
-            options={jobOptions}
-            onChange={(option) => setJobTitle(option ? option.value : '')}
-            value={jobOptions.find(option => option.value === jobTitle)}
-            className='form-control'
+      <form onSubmit={handleSubmit(onSubmit)} className="form">
+        <div className="form-group">
+          <label htmlFor="title">Job Title</label>
+          <Controller
+            name="title"
+            control={control}
+            defaultValue={null}
+            rules={{ required: "Job title is required" }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={jobOptions}
+                className="form-control"
+                placeholder="Select job title"
+                isClearable
+              />
+            )}
           />
+          {errors.title && <div className="text-danger">{errors.title.message}</div>}
         </div>
-        <div className='form-group'>
-          <label>Job Description:</label>
+
+        <div className="form-group">
+          <label htmlFor="description">Job Description</label>
           <textarea
-            onChange={(e) => setJobDescription(e.target.value)}
-            value={jobDescription}
-            className='form-control'
+            id="description"
+            {...register("description", { required: "Description is required", minLength: { value: 5, message: "Description must be at least 5 characters long" } })}
+            className="form-control"
           />
+          {errors.description && <div className="text-danger">{errors.description.message}</div>}
         </div>
-        <div className='form-group'>
-          <label>Location:</label>
-          <Select
-            options={locationOptions}
-            onChange={(option) => setJobLocation(option ? option.value : '')}
-            value={locationOptions.find(option => option.value === jobLocation)}
-            className='form-control'
+
+        <div className="form-group">
+          <label htmlFor="location">Location</label>
+          <Controller
+            name="location"
+            control={control}
+            defaultValue={null}
+            rules={{ required: "Location is required" }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={locationOptions}
+                className="form-control"
+                placeholder="Select location"
+                isClearable
+              />
+            )}
           />
+          {errors.location && <div className="text-danger">{errors.location.message}</div>}
         </div>
-        <div className='button-group'>
-          <button
-            type='submit'
-            className='btn btn-primary'
-            disabled={isFormIncomplete} // Disable the button if the form is incomplete
-          >
+
+        <div className="button-group">
+          <button type="submit" className="btn btn-primary">
             Add Job
-          </button>
-          <button
-            onClick={() => {
-              if (window.confirm("Are you sure you want to delete all jobs?")) {
-                resetAllJobs();
-              }
-            }}
-            type="button"
-            className='btn btn-danger'
-          >
-            Delete All Jobs
           </button>
         </div>
       </form>
     </div>
   );
-}
+};
+
+export default JobForm;
