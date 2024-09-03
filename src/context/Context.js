@@ -36,11 +36,6 @@ export default function ContextProvider(props) {
     localStorage.setItem("job_ar", JSON.stringify(updatedJobAr));
   };
 
-  // const resetAllJobs = () => {
-  //   setJobAr([]);
-  //   localStorage.setItem("job_ar", JSON.stringify([]));
-  // };
-
   const deleteJob = async (del_id) => {
     try {
       await axios.delete(`${API_URL}/jobs/${del_id}`); // מחיקת עבודה מהשרת
@@ -52,7 +47,6 @@ export default function ContextProvider(props) {
     }
   };
 
-  
   const updateJob = async (jobId, bodyData) => {
     if (!jobId) {
       throw new Error("Job ID is not defined");
@@ -64,18 +58,13 @@ export default function ContextProvider(props) {
       const { data } = await axios.put(url, bodyData);
       return data;
     } catch (err) {
-      console.error(`Error updating job: ${err.message}`);
+      console.error(`Error updating job: ${err.response?.data?.message || err.message}`);
       throw err;
     }
   };
   
-  
-  
-  
-
   const globalValue = {
     job_ar, fetchJobs,
-    // resetAllJobs
     addJob, deleteJob, updateJob,
     showJobEdits, setShowJobEdits, currentEditJob, setCurrentEditJob
   };
