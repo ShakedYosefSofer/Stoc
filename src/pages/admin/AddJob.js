@@ -14,10 +14,10 @@ const jobOptions = [
 ];
 
 const locationOptions = [
-  { value: 'tel_aviv', label: 'Tel Aviv' },
+  { value: 'tel aviv', label: 'Tel Aviv' },
   { value: 'jerusalem', label: 'Jerusalem' },
   { value: 'haifa', label: 'Haifa' },
-  { value: 'beer_sheva', label: 'Beer Sheva' },
+  { value: 'beer sheva', label: 'Beer Sheva' },
   { value: 'netanya', label: 'Netanya' },
 ];
 

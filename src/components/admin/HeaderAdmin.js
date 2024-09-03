@@ -34,10 +34,6 @@ export default function HeaderAdmin() {
             <ul>
               <li><Link to="/admin/users">Users</Link></li>
               <li><Link to="/admin/JobsAdmin">Jobs</Link></li>
-            
-            
-              <li><Link to="/admin/categories">Categories</Link></li>
-
            
             </ul>
             <div>
