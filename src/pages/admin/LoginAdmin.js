@@ -2,6 +2,8 @@ import React, { useRef } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../services/apiService';
+import { Link } from 'react-router-dom';
+
 
 export default function LoginAdmin() {
   const nav = useNavigate();
@@ -52,6 +54,8 @@ export default function LoginAdmin() {
         <label>Password:</label>
         <input ref={passwordRef} type="password" className='form-control' />
         <button className='btn btn-success mt-3'>Log in</button>
+        <Link to="/admin/ForgotPassword" className="btn btn-link mt-2"> Forgot Password?</Link>
+        
       </form>
     </div>
   )

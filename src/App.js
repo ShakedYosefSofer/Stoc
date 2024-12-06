@@ -11,7 +11,7 @@ import UsersAdmin from "./pages/admin/UsersAdmin";
 import FormSignUp from "./pages/FormSignUp";
 import JobsAdmin from "./pages/admin/JobsAdmin";
 import AddJob from "./pages/admin/AddJob";
-
+import ForgotPassword from "./pages/admin/ForgotPassword";
 
 function App() {
 
@@ -35,6 +35,7 @@ function App() {
           <Route path="/admin/users" element={<UsersAdmin />} />
           <Route path="/admin/JobsAdmin" element={<JobsAdmin />} />
           <Route path="/admin/jobs/add" element={<AddJob />} />
+          <Route path="/admin/ForgotPassword" element={<ForgotPassword />} />
         
            <Route path="*" element={<Page404 />} />
         </Routes>
