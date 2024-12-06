@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import JobList from '../components/admin/JobList';
-import JobEdit from '../components/admin/EditJob';
-import { AppContext } from '../context/Context';
 import '../css/job.css';
 import '../css/filterjobs.css';
 
-export default function JobPage() {
-  const { showEditJobs } = useContext(AppContext);
+export default function DesignerPage() {
   const [selectedCity, setSelectedCity] = useState("");
 
   // פונקציה לטיפול בשינוי בעיר הנבחרת
@@ -16,9 +13,7 @@ export default function JobPage() {
 
   return (
     <div className="job-page">
-      {showEditJobs && <JobEdit />}
-      <br />
-      <h1>Jobs</h1>
+      <h1>Designers</h1>
       {/* רשימה נגללת לפילטור לפי עיר */}
       <div className="city-filter">
         <label htmlFor="city">Select City:</label>
@@ -26,7 +21,6 @@ export default function JobPage() {
           id="city"
           value={selectedCity}
           onChange={handleCityChange}>
-
           <option value="">All Cities</option>
           <option value="Tel Aviv">Tel Aviv</option>
           <option value="Jerusalem">Jerusalem</option>
@@ -38,7 +32,6 @@ export default function JobPage() {
 
       {/* העברת העיר שנבחרה ל-JobList */}
       <JobList city={selectedCity} />
-      
     </div>
   );
 }

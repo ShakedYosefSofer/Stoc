@@ -20,6 +20,11 @@ export default function Header() {
          
        
               <li><Link to="/">Jobs</Link></li>
+              <li><Link to="/Developer">Developer</Link></li>
+              <li><Link to="/Designer">Designer</Link></li>
+              <li><Link to="/DevOps">DevOps</Link></li>
+              <li><Link to="/QA">QA</Link></li>
+              <li><Link to="/Others">Others</Link></li>
               <li><Link to="/FormSignUp">SignUp</Link></li>
               <li><Link to="/Admin">Admin</Link></li>
               <li className='home-icon' ><Link to="/"><BsFillHouseDoorFill /> </Link></li>

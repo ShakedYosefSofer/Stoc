@@ -17,7 +17,7 @@ export default function JobList() {
 
   return (
     <div className='job-list-container'>
-      <h2>List of Jobs</h2>
+      <h2></h2>
       <div className='job-list'>
         {job_ar.map(item => (
           <JobItem key={item._id} item={item} /> // Ensure _id is used if that's the unique identifier
