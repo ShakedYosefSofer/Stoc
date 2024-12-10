@@ -19,23 +19,6 @@ export default function JobPage() {
       {showEditJobs && <JobEdit />}
       <br />
       <h1>Jobs</h1>
-      {/* רשימה נגללת לפילטור לפי עיר */}
-      <div className="city-filter">
-        <label htmlFor="city">Select City:</label>
-        <select
-          id="city"
-          value={selectedCity}
-          onChange={handleCityChange}>
-
-          <option value="">All Cities</option>
-          <option value="Tel Aviv">Tel Aviv</option>
-          <option value="Jerusalem">Jerusalem</option>
-          <option value="Haifa">Haifa</option>
-          <option value="Eilat">Eilat</option>
-          {/* הוספת ערים נוספות */}
-        </select>
-      </div>
-
       {/* העברת העיר שנבחרה ל-JobList */}
       <JobList city={selectedCity} />
       

@@ -1,0 +1,87 @@
+/* עיצוב בסיסי */
+header {
+    padding: 10px 0;
+  }
+  
+  .nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px;
+  }
+  
+  .nav-list a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+  }
+  
+  .nav-list a:hover {
+    color: #ff5722;
+  }
+  
+  /* המבורגר */
+  .hamburger {
+    cursor: pointer;
+    display: flex;
+    z-index: 2000; /* עוזר לו להיות מעל כל אלמנט אחר */
+  }
+  
+  /* הסתרת התפריט במסכים קטנים */
+  nav {
+    display: none;
+  }
+  
+  nav.menu-open {
+    display: block;
+    position: absolute;
+    top: 111px; /* מיקום התפריט מתחת לכותרת */
+    left: 0;
+    background: #1aff00;
+    padding: 20px;
+    z-index: 1000;
+  }
+  
+  .nav-list {
+    flex-direction: column;
+    gap: 50px; /* פחות מרווח בין הקישורים */
+  }
+  
+  /* הצגת התפריט במסכים גדולים */
+  @media (min-width: 992px) {
+    nav {
+      display: block !important;
+    }
+  
+    .hamburger {
+      display: none;
+    }
+  
+    .nav-list {
+      flex-direction: row;
+    }
+  
+    /* סידור התפריט כך שיתפוס את כל הרוחב במסכים גדולים */
+    .nav-list a {
+      margin-right: 20px; /* רווח בין כל קישור */
+    }
+
+    .container-fluid{
+        width: 100%;
+    }
+    .home-icon {
+        display: inline-flex; /* מרכזת את האייקון */
+        align-items: center; /* ממקמת את האייקון במרכז אנכי */
+        width: 65px; /* הגדרת גודל הקופסה */
+        height: 65px; /* הגדרת גודל הקופסה */
+        background-color: green; /* צבע רקע */
+        border-radius: 50%; /* מעגל מושלם */
+    }
+      
+        .home-icon:hover {
+        background-color: lightseagreen; /* שינוי צבע רקע במעבר עכבר */
+      }
+
+}
+  

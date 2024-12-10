@@ -17,7 +17,7 @@ import DesignerPage from "./pages/DesignerPage";
 import DevOpsPage from "./pages/DevOpsPage";
 import QAPage from "./pages/QAPage";
 import OthersPage from "./pages/OthersPage";
-
+import LoginPage from "./pages/LoginPage";
 
 function App() {
 
@@ -41,7 +41,9 @@ function App() {
           <Route path="/devops" element={<DevOpsPage />} />
           <Route path="/qa" element={<QAPage />} />
           <Route path="/others" element={<OthersPage />} />
-          
+          <Route path="/login" element={<LoginPage />} />
+          {/* <Route path="/jobs/:title" element={<JobPage />} /> */}
+
                       {/* admin pages */}
             <Route path="/admin" element={<LoginAdmin />} />
           <Route path="/admin/users" element={<UsersAdmin />} />

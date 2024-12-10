@@ -1,43 +1,44 @@
-/* עיצוב למיכל הפילטור של העיר */
-.city-filter {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  /* עיצוב לתווית */
-  .city-filter label {
-    font-size: 16px;
-    margin-right: 10px;
-    color: #444;
-    font-weight: 600;
-  }
-  
-  /* עיצוב לרשימה הנגללת */
-  .city-filter select {
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    background-color: #f7f7f7;
-    color: #444;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    width: 200px;
-  }
-  
-  /* עיצוב על hover */
-  .city-filter select:hover {
-    border-color: #3498db;
-    background-color: #ecf6ff;
-  }
-  
-  /* עיצוב בעת בחירה */
-  .city-filter select:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.6);
-  }
-  
+/* עיצוב לפילטרים */
+.job-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* עיצוב לפילטרים עצמם */
+.city-filter, .job-type-filter {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.city-filter label, .job-type-filter label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.city-filter select, .job-type-filter select {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+/* עיצוב להודעה שאין עבודות */
+.no-jobs {
+  color: #d9534f;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
