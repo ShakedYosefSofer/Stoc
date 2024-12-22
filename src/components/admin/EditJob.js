@@ -11,7 +11,7 @@ const jobOptions = [
   { value: 'devops', label: 'DevOps' },
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
-  { value: 'cyber', label: 'cyber' },
+  { value: 'cyber', label: 'Cyber' },
 ];
 
 export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
@@ -20,7 +20,7 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
     defaultValues: {
       title: jobOptions.find(option => option.value === currentEditItem.title) || null,
       description: currentEditItem.description,
-      location: null, // יתעדכן לאחר הטעינה של ערים
+      location: null, // This will be updated after cities are loaded
     }
   });
 
@@ -39,7 +39,7 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
 
         setLocationOptions(cityOptions);
 
-        // מציאת העיר הנוכחית והגדרתה כברירת מחדל בטופס
+        // Set the current location as default value if available
         const currentLocation = cityOptions.find(city => city.value === currentEditItem.location);
         if (currentLocation) {
           setValue('location', currentLocation);
@@ -68,12 +68,12 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
       axios.defaults.withCredentials = true;
       const response = await axios.put(url, bodyData);
       console.log(response.data);
-      alert("Job updated successfully!"); // מציג התראה שהעדכון הצליח
+      alert("Job updated successfully!");
       setShowEdit(false);
       doApi();
     } catch (err) {
       console.error('Error updating job:', err.response ? err.response.data : err.message);
-      alert(`Error updating job: ${err.response ? err.response.data.error : err.message}`); // מציג התראה במקרה של שגיאה
+      alert(`Error updating job: ${err.response ? err.response.data.error : err.message}`);
     }
   };
 
@@ -104,7 +104,10 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
             <label htmlFor="description">Job Description</label>
             <textarea
               id="description"
-              {...register("description", { required: "Description is required", minLength: { value: 5, message: "Description must be at least 5 characters long" } })}
+              {...register("description", { 
+                required: "Description is required", 
+                minLength: { value: 5, message: "Description must be at least 5 characters long" } 
+              })}
               className="form-control"
             />
             {errors.description && <div className="text-danger">{errors.description.message}</div>}
