@@ -10,6 +10,7 @@ const jobOptions = [
   { value: 'devops', label: 'DevOps' },
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
+  { value: 'cyber', label: 'cyber' },
 ];
 
 export default function AddJob() {

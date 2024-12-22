@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../services/apiService';
 import Select from 'react-select';
@@ -10,14 +11,16 @@ const jobOptions = [
   { value: 'devops', label: 'DevOps' },
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
+  { value: 'cyber', label: 'cyber' },
 ];
 
 export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const navigate = useNavigate();
+  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm({
     defaultValues: {
       title: jobOptions.find(option => option.value === currentEditItem.title) || null,
       description: currentEditItem.description,
-      location: null, // Will be populated from API
+      location: null, // יתעדכן לאחר הטעינה של ערים
     }
   });
 
@@ -25,16 +28,23 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch cities from the external API
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const response = await axios.get(`${API_URL}/jobs/cities`);
         const cityOptions = response.data.map(city => ({
-          value: city.value,  // Assuming city object has "value" and "label" keys
+          value: city.value, // Assuming city object has "value" and "label" keys
           label: city.label,
         }));
+
         setLocationOptions(cityOptions);
+
+        // מציאת העיר הנוכחית והגדרתה כברירת מחדל בטופס
+        const currentLocation = cityOptions.find(city => city.value === currentEditItem.location);
+        if (currentLocation) {
+          setValue('location', currentLocation);
+        }
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching cities:", err);
@@ -44,14 +54,13 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
     };
 
     fetchCities();
-  }, []);
+  }, [currentEditItem.location, setValue]);
 
   const onSubForm = async (data) => {
-    // Map the selected options to their values
     const bodyData = {
-      title: data.title ? data.title.value : '', // Extract the value from the Select component
+      title: data.title ? data.title.value : '',
       description: data.description,
-      location: data.location ? data.location.value : '', // Extract the value from the Select component
+      location: data.location ? data.location.value : '',
     };
 
     try {
@@ -59,18 +68,14 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
       axios.defaults.withCredentials = true;
       const response = await axios.put(url, bodyData);
       console.log(response.data);
-      if (response.data.modifiedCount) {
-        setShowEdit(false);
-        doApi();
-      }
+      alert("Job updated successfully!"); // מציג התראה שהעדכון הצליח
+      setShowEdit(false);
+      doApi();
     } catch (err) {
       console.error('Error updating job:', err.response ? err.response.data : err.message);
-      alert(`Error updating job: ${err.response ? err.response.data.error : err.message}`);
+      alert(`Error updating job: ${err.response ? err.response.data.error : err.message}`); // מציג התראה במקרה של שגיאה
     }
   };
-
-  if (loading) return <div>Loading cities...</div>;
-  if (error) return <div>{error}</div>;
 
   return (
     <div className='popup_window'>
@@ -117,6 +122,7 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
                   className="form-control"
                   placeholder="Select location"
                   isClearable
+                  isLoading={loading}
                 />
               )}
             />
@@ -129,7 +135,7 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
             type="button"
             className='btn btn-danger ms-2 mt-4'
           >
-            Cancel
+            Exit
           </button>
         </form>
       </div>
