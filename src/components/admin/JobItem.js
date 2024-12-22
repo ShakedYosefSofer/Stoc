@@ -10,19 +10,35 @@ export default function JobItem({ item }) {
 
   const [cvFile, setCvFile] = useState(null);
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [error, setError] = useState('');
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setCvFile(file);
-    setFileUploaded(true);
+    if (!file) return;
+
+    // בדיקת סוג הקובץ
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Invalid file type. Please upload a PDF or Word document.');
+      setCvFile(null);
+      setFileUploaded(false);
+    } else {
+      setError('');
+      setCvFile(file);
+      setFileUploaded(true);
+    }
   };
 
   const handleSend = () => {
-    // Implement file upload logic here
-    // For now, just reset the file state
-    setCvFile(null);
-    setFileUploaded(false);
-    alert('CV has been sent successfully!');
+    if (cvFile) {
+      // לוגיקה להעלאת הקובץ לשרת
+      console.log('Uploading file:', cvFile);
+
+      // איפוס המצב אחרי ההעלאה
+      setCvFile(null);
+      setFileUploaded(false);
+      alert('CV has been sent successfully!');
+    }
   };
 
   return (
@@ -43,15 +59,18 @@ export default function JobItem({ item }) {
       )}
       <div className='cv-upload'>
         {!fileUploaded ? (
-          <label className='cv-upload-label'>
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={handleFileChange}
-              className="cv-upload-input"
-            />
-            <span className='cv-upload-button'>Upload CV</span>
-          </label>
+          <>
+            <label className='cv-upload-label'>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileChange}
+                className="cv-upload-input"
+              />
+              <span className='cv-upload-button'>Upload CV</span>
+            </label>
+            {error && <p className='cv-upload-error'>{error}</p>} {/* הצגת הודעת שגיאה */}
+          </>
         ) : (
           <div className='cv-upload-success'>
             <p className='cv-upload-file-name'>Selected file: {cvFile.name}</p>

@@ -13,14 +13,28 @@ const jobOptions = [
   { value: 'designer', label: 'Designer' },
 ];
 
-const locationOptions = [
-  { value: 'tel_aviv', label: 'Tel Aviv' },
-  { value: 'jerusalem', label: 'Jerusalem' },
-  { value: 'haifa', label: 'Haifa' },
-  { value: 'beer sheva', label: 'Beer Sheva' },
-  { value: 'netanya', label: 'Netanya' },
-];
+useEffect(() => {
+  const fetchCities = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/jobs/cities'); // עדכון לשרת בפורט 3001
 
+      const cities = response.data.map(city => ({
+        value: city.value,
+        label: city.label
+      }));
+
+      setLocationOptions(cities);
+      setFetchError(null); 
+    } catch (err) {
+      console.error('Error fetching cities:', err.message);
+      setFetchError('Failed to load cities. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchCities();
+}, []);
 const JobForm = () => {
   const { register, handleSubmit, control, formState: { errors } } = useForm();
   const navigate = useNavigate();

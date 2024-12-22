@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import { API_URL } from '../../services/apiService';
@@ -12,22 +12,39 @@ const jobOptions = [
   { value: 'designer', label: 'Designer' },
 ];
 
-const locationOptions = [
-  { value: 'tel_aviv', label: 'Tel Aviv' },
-  { value: 'jerusalem', label: 'Jerusalem' },
-  { value: 'haifa', label: 'Haifa' },
-  { value: 'beer_sheva', label: 'Beer Sheva' },
-  { value: 'netanya', label: 'Netanya' },
-];
-
 export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
   const { register, handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       title: jobOptions.find(option => option.value === currentEditItem.title) || null,
       description: currentEditItem.description,
-      location: locationOptions.find(option => option.value === currentEditItem.location) || null,
+      location: null, // Will be populated from API
     }
   });
+
+  const [locationOptions, setLocationOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch cities from the external API
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/jobs/cities`);
+        const cityOptions = response.data.map(city => ({
+          value: city.value,  // Assuming city object has "value" and "label" keys
+          label: city.label,
+        }));
+        setLocationOptions(cityOptions);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching cities:", err);
+        setError("Failed to fetch cities");
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, []);
 
   const onSubForm = async (data) => {
     // Map the selected options to their values
@@ -51,6 +68,9 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
       alert(`Error updating job: ${err.response ? err.response.data.error : err.message}`);
     }
   };
+
+  if (loading) return <div>Loading cities...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className='popup_window'>
