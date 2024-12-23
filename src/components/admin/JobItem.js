@@ -78,7 +78,7 @@ function JobItem({ item }) {
           <MapContainer
             center={mapCenter}
             zoom={12}
-            scrollWheelZoom={false}
+            scrollWheelZoom={true}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
