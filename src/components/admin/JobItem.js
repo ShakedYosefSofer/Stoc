@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom'; // Import the hook to get the current URL
-import { AppContext } from '../context/Context';
-import '../css/job.css';
+import { AppContext } from '../../context/Context';
+import '../../css/job.css';
 
 export default function JobItem({ item }) {
   const { deleteJob, setShowJobEdits, setCurrentEditJob } = useContext(AppContext);

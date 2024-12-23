@@ -3,8 +3,8 @@ import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-import { API_URL } from '../services/apiService'; // Ensure this path is correct
-import '../css/job.css';
+import { API_URL } from '../../services/apiService'; // Ensure this path is correct
+import '../../css/job.css';
 
 const jobOptions = [
   { value: 'developer', label: 'Developer' },
