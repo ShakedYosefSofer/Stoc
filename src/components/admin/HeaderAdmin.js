@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { API_URL } from '../../services/apiService';
 import {useCookies} from 'react-cookie';
+// import { Link } from "react-router-dom";
 
 export default function HeaderAdmin() {
 // יכול לבדוק את הקוקיס שיש לנו
@@ -25,19 +26,21 @@ export default function HeaderAdmin() {
 
   return (
     <header className='container-fluid bg-light shadow-sm'>
+          <h2>
+            <Link to="/">
+              <img src="/Stoc.png" alt="Stoc" height="75" width="125" />
+            </Link>
+          </h2>
       <div className='container p-2'>
         <div className='row align-items-center'>
           <div className='logo col-auto'>
-            <h2>Admin</h2>
+          <h2>admin</h2>
           </div>
           <nav className='col d-md-flex justify-content-between align-items-center'>
             <ul>
               <li><Link to="/admin/users">Users</Link></li>
               <li><Link to="/admin/JobsAdmin">Jobs</Link></li>
-            
-            
-              <li><Link to="/admin/categories">Categories</Link></li>
-
+              
            
             </ul>
             <div>

@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
-import { API_URL } from '../../services/apiService';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
@@ -11,36 +10,52 @@ const jobOptions = [
   { value: 'devops', label: 'DevOps' },
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
-];
-
-const locationOptions = [
-  { value: 'tel_aviv', label: 'Tel Aviv' },
-  { value: 'jerusalem', label: 'Jerusalem' },
-  { value: 'haifa', label: 'Haifa' },
-  { value: 'beer_sheva', label: 'Beer Sheva' },
-  { value: 'netanya', label: 'Netanya' },
+  { value: 'cyber', label: 'cyber' },
 ];
 
 export default function AddJob() {
   const { register, handleSubmit, control, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const [locationOptions, setLocationOptions] = useState([]); // סטייט עבור הערים
+  const [isLoading, setIsLoading] = useState(true); // סטייט עבור טוען
+  const [fetchError, setFetchError] = useState(null); // סטייט עבור שגיאות טעינה
 
-  const onSubmit = async (data) => {
-    // Extracting values from Select components
-    const bodyData = {
-      title: data.title ? data.title.value : '', // Extracting value from the Select component
-      description: data.description,
-      location: data.location ? data.location.value : '' // Extracting value from the Select component
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/jobs/cities'); // עדכון לשרת בפורט 3001
+
+        const cities = response.data.map(city => ({
+          value: city.value,
+          label: city.label // ודא שהנתונים מכילים את המידע הנדרש
+        }));
+
+        setLocationOptions(cities); // עדכון הערים
+        setFetchError(null); 
+      } catch (err) {
+        console.error('Error fetching cities:', err.message);
+        setFetchError('Failed to load cities. Please try again later.');
+      } finally {
+        setIsLoading(false); // סיום הטעינה
+      }
     };
 
-    console.log(bodyData); // For debugging purposes
+    fetchCities(); // קריאה לפונקציה ב- useEffect
+  }, []); // ריקון של מערך התלויות כדי להריץ רק פעם אחת לאחר טעינת הרכיב
+
+  const onSubmit = async (data) => {
+    const bodyData = {
+      title: data.title ? data.title.value : '',
+      description: data.description,
+      location: data.location ? data.location.value : ''
+    };
+
     try {
-      const url = `${API_URL}/jobs`;
-      axios.defaults.withCredentials = true;
+      const url = 'http://localhost:3001/jobs'; // עדכון לשרת בפורט 3001
       const { data: responseData } = await axios.post(url, bodyData);
       if (responseData._id) {
         alert("New job added");
-        navigate("/admin/JobsAdmin");
+        navigate("/admin/JobsAdmin"); // ניווט לאחר הצלחה
       }
     } catch (err) {
       console.error('Error adding job:', err);
@@ -84,21 +99,27 @@ export default function AddJob() {
 
         <div className="form-group">
           <label>Location</label>
-          <Controller
-            name="location"
-            control={control}
-            defaultValue={null}
-            rules={{ required: "Location is required" }}
-            render={({ field }) => (
-              <Select
-                {...field}
-                options={locationOptions}
-                className="form-control"
-                placeholder="Select location"
-                isClearable
-              />
-            )}
-          />
+          {isLoading ? (
+            <p>Loading cities...</p> // הודעה בזמן טעינה
+          ) : fetchError ? (
+            <p className="text-danger">{fetchError}</p> // הודעת שגיאה אם קרתה
+          ) : (
+            <Controller
+              name="location"
+              control={control}
+              defaultValue={null}
+              rules={{ required: "Location is required" }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  options={locationOptions} // הערים שהורדו מה-API
+                  className="form-control"
+                  placeholder="Select location"
+                  isClearable
+                />
+              )}
+            />
+          )}
           {errors.location && <div className="text-danger">{errors.location.message}</div>}
         </div>
 

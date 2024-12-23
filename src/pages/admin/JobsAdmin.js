@@ -77,6 +77,7 @@ export default function JobsAdmin() {
                   onClick={() => {
                     if (window.confirm("Delete job?")) {
                       deleteItem(item._id);
+                      window.location.reload(); 
                     }
                   }}
                   className='btn btn-danger'

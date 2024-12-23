@@ -8,11 +8,13 @@ export default function ContextProvider(props) {
   const [job_ar, setJobAr] = useState([]);
   const [showJobEdits, setShowJobEdits] = useState(false);
   const [currentEditJob, setCurrentEditJob] = useState({});
+  const [currentCategory, setCurrentCategory] = useState(""); // קטגוריה נוכחית
 
-  // פונקציה לטעינת עבודות מהשרת
-  const fetchJobs = async () => {
+  // פונקציה לטעינת עבודות מהשרת (עם או בלי קטגוריה)
+  const fetchJobs = async (category = "") => {
     try {
-      const response = await axios.get(`${API_URL}/jobs`);
+      const endpoint = category ? `${API_URL}/jobs/category/${category}` : `${API_URL}/jobs`;
+      const response = await axios.get(endpoint);
       setJobAr(response.data);
       localStorage.setItem("job_ar", JSON.stringify(response.data));
     } catch (err) {
@@ -21,12 +23,12 @@ export default function ContextProvider(props) {
   };
 
   useLayoutEffect(() => {
-    // קריאה לLocalStorage אם יש נתונים זמינים
+    // קריאה ל-LocalStorage אם יש נתונים זמינים
     const storedJobAr = localStorage.getItem("job_ar");
     if (storedJobAr) {
       setJobAr(JSON.parse(storedJobAr));
     } else {
-      fetchJobs(); // קרא ל-fetchJobs אם אין נתונים ב-localStorage
+      fetchJobs(); // קריאה ל-fetchJobs אם אין נתונים ב-localStorage
     }
   }, []);
 
@@ -51,7 +53,7 @@ export default function ContextProvider(props) {
     if (!jobId) {
       throw new Error("Job ID is not defined");
     }
-  
+
     try {
       const url = `${API_URL}/jobs/${jobId}`;
       axios.defaults.withCredentials = true;
@@ -62,11 +64,13 @@ export default function ContextProvider(props) {
       throw err;
     }
   };
-  
+
   const globalValue = {
     job_ar, fetchJobs,
     addJob, deleteJob, updateJob,
-    showJobEdits, setShowJobEdits, currentEditJob, setCurrentEditJob
+    showJobEdits, setShowJobEdits,
+    currentEditJob, setCurrentEditJob,
+    currentCategory, setCurrentCategory // קטגוריה נוכחית לניהול
   };
 
   return (

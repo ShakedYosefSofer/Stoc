@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../services/apiService';
 import Select from 'react-select';
@@ -10,31 +11,56 @@ const jobOptions = [
   { value: 'devops', label: 'DevOps' },
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
-];
-
-const locationOptions = [
-  { value: 'tel_aviv', label: 'Tel Aviv' },
-  { value: 'jerusalem', label: 'Jerusalem' },
-  { value: 'haifa', label: 'Haifa' },
-  { value: 'beer_sheva', label: 'Beer Sheva' },
-  { value: 'netanya', label: 'Netanya' },
+  { value: 'cyber', label: 'Cyber' },
 ];
 
 export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const navigate = useNavigate();
+  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm({
     defaultValues: {
       title: jobOptions.find(option => option.value === currentEditItem.title) || null,
       description: currentEditItem.description,
-      location: locationOptions.find(option => option.value === currentEditItem.location) || null,
+      location: null, // This will be updated after cities are loaded
     }
   });
 
+  const [locationOptions, setLocationOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/jobs/cities`);
+        const cityOptions = response.data.map(city => ({
+          value: city.value, // Assuming city object has "value" and "label" keys
+          label: city.label,
+        }));
+
+        setLocationOptions(cityOptions);
+
+        // Set the current location as default value if available
+        const currentLocation = cityOptions.find(city => city.value === currentEditItem.location);
+        if (currentLocation) {
+          setValue('location', currentLocation);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching cities:", err);
+        setError("Failed to fetch cities");
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, [currentEditItem.location, setValue]);
+
   const onSubForm = async (data) => {
-    // Map the selected options to their values
     const bodyData = {
-      title: data.title ? data.title.value : '', // Extract the value from the Select component
+      title: data.title ? data.title.value : '',
       description: data.description,
-      location: data.location ? data.location.value : '', // Extract the value from the Select component
+      location: data.location ? data.location.value : '',
     };
 
     try {
@@ -42,10 +68,9 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
       axios.defaults.withCredentials = true;
       const response = await axios.put(url, bodyData);
       console.log(response.data);
-      if (response.data.modifiedCount) {
-        setShowEdit(false);
-        doApi();
-      }
+      alert("Job updated successfully!");
+      setShowEdit(false);
+      doApi();
     } catch (err) {
       console.error('Error updating job:', err.response ? err.response.data : err.message);
       alert(`Error updating job: ${err.response ? err.response.data.error : err.message}`);
@@ -79,7 +104,10 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
             <label htmlFor="description">Job Description</label>
             <textarea
               id="description"
-              {...register("description", { required: "Description is required", minLength: { value: 5, message: "Description must be at least 5 characters long" } })}
+              {...register("description", { 
+                required: "Description is required", 
+                minLength: { value: 5, message: "Description must be at least 5 characters long" } 
+              })}
               className="form-control"
             />
             {errors.description && <div className="text-danger">{errors.description.message}</div>}
@@ -97,6 +125,7 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
                   className="form-control"
                   placeholder="Select location"
                   isClearable
+                  isLoading={loading}
                 />
               )}
             />
@@ -109,7 +138,7 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
             type="button"
             className='btn btn-danger ms-2 mt-4'
           >
-            Cancel
+            Exit
           </button>
         </form>
       </div>
