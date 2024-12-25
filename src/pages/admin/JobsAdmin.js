@@ -59,8 +59,9 @@ export default function JobsAdmin() {
             <td>#</td>
             <td>Title</td>
             <td>Description</td>
-            <td>Location</td>
+            <td>Requirements</td> {/* הוספת שדה דרישות המשרה */}
             <td>Salary</td>
+            <td>Location</td>
             <td>Del/Edit</td>
           </tr>
         </thead>
@@ -70,8 +71,9 @@ export default function JobsAdmin() {
               <td>{i + 1}</td>
               <td>{item.title}</td>
               <td>{item.description}</td>
-              <td>{item.location}</td>
+              <td>{item.requirements}</td> {/* הצגת דרישות המשרה */}
               <td>{item.salary}</td>
+              <td>{item.location}</td>
               <td>
                 <button
                   onClick={() => {

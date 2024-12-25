@@ -10,7 +10,7 @@ const jobOptions = [
   { value: 'devops', label: 'DevOps' },
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
-  { value: 'cyber', label: 'cyber' },
+  { value: 'cyber', label: 'Cyber' },
 ];
 
 export default function AddJob() {
@@ -47,7 +47,9 @@ export default function AddJob() {
     const bodyData = {
       title: data.title ? data.title.value : '',
       description: data.description,
-      location: data.location ? data.location.value : ''
+      location: data.location ? data.location.value : '',
+      requirements: data.requirements, // דרישות המשרה
+      salary: data.salary, // הוספת משכורת
     };
 
     try {
@@ -92,9 +94,38 @@ export default function AddJob() {
           <input
             {...register("description", { required: true, minLength: 5 })}
             className="form-control"
+            placeholder="Enter job description"
             type="text"
           />
           {errors.description && <div className="text-danger">* Enter a valid description</div>}
+        </div>
+
+        
+
+        {/* New Requirements Field */}
+        <div className="form-group">
+          <label>Job Requirements</label>
+          <textarea
+            {...register("requirements", { 
+              required: "Requirements are required", 
+              minLength: { value: 10, message: "Requirements must be at least 10 characters long" }
+            })}
+            className="form-control"
+            placeholder="Enter job requirements"
+          />
+          {errors.requirements && <div className="text-danger">{errors.requirements.message}</div>}
+        </div>
+
+        {/* New Salary Field */}
+        <div className="form-group">
+          <label>Salary</label>
+          <input
+            {...register("salary", { required: "Salary is required" })}
+            className="form-control"
+            type="number"
+            placeholder="Enter salary"
+          />
+          {errors.salary && <div className="text-danger">{errors.salary.message}</div>}
         </div>
 
         <div className="form-group">

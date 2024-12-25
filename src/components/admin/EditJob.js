@@ -20,7 +20,10 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
     defaultValues: {
       title: jobOptions.find(option => option.value === currentEditItem.title) || null,
       description: currentEditItem.description,
-      location: null, // This will be updated after cities are loaded
+      requirements: currentEditItem.requirements || '',
+      salary: currentEditItem.salary || '',
+      location: null, // Updated after cities are loaded
+   
     }
   });
 
@@ -33,13 +36,12 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
       try {
         const response = await axios.get(`${API_URL}/jobs/cities`);
         const cityOptions = response.data.map(city => ({
-          value: city.value, // Assuming city object has "value" and "label" keys
+          value: city.value,
           label: city.label,
         }));
 
         setLocationOptions(cityOptions);
 
-        // Set the current location as default value if available
         const currentLocation = cityOptions.find(city => city.value === currentEditItem.location);
         if (currentLocation) {
           setValue('location', currentLocation);
@@ -60,6 +62,8 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
     const bodyData = {
       title: data.title ? data.title.value : '',
       description: data.description,
+      requirements: data.requirements,
+      salary: data.salary,
       location: data.location ? data.location.value : '',
     };
 
@@ -104,13 +108,42 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
             <label htmlFor="description">Job Description</label>
             <textarea
               id="description"
-              {...register("description", { 
-                required: "Description is required", 
-                minLength: { value: 5, message: "Description must be at least 5 characters long" } 
+              {...register("description", {
+                required: "Description is required",
+                minLength: { value: 5, message: "Description must be at least 5 characters long" }
               })}
               className="form-control"
             />
             {errors.description && <div className="text-danger">{errors.description.message}</div>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="requirements">Job Requirements</label>
+            <textarea
+              id="requirements"
+              {...register("requirements", {
+                required: "Requirements are required",
+                minLength: { value: 5, message: "Requirements must be at least 5 characters long" }
+              })}
+              className="form-control"
+              placeholder="Enter job requirements"
+            />
+            {errors.requirements && <div className="text-danger">{errors.requirements.message}</div>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="salary">Salary</label>
+            <input
+              id="salary"
+              type="number"
+              {...register("salary", {
+                required: "Salary is required",
+                min: { value: 0, message: "Salary must be a positive number" }
+              })}
+              className="form-control"
+              placeholder="Enter salary"
+            />
+            {errors.salary && <div className="text-danger">{errors.salary.message}</div>}
           </div>
 
           <div className="form-group">

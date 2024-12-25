@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { AppContext } from '../../context/Context';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import '../../css/job.css';
-import '../../css/map.css';  // Import the MAP.CSS file
+import '../../css/map.css'; // Import the MAP.CSS file
 
 function JobItem({ item }) {
   const { deleteJob, setShowJobEdits, setCurrentEditJob } = useContext(AppContext);
@@ -15,21 +15,23 @@ function JobItem({ item }) {
   const [error, setError] = useState('');
   const [mapCenter, setMapCenter] = useState(null);
 
-  // Fetching coordinates for the job location (for example, using city name)
+  // Fetching coordinates for the job location
   useEffect(() => {
     if (item.location) {
       const fetchCoordinates = async () => {
         try {
-          const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${item.location}&format=json&addressdetails=1`);
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?city=${item.location}&format=json&addressdetails=1`
+          );
           const data = await response.json();
           if (data && data[0]) {
             const { lat, lon } = data[0];
             setMapCenter({ lat: parseFloat(lat), lng: parseFloat(lon) });
           } else {
-            console.error("Location not found.");
+            console.error('Location not found.');
           }
         } catch (err) {
-          console.error("Error fetching coordinates:", err);
+          console.error('Error fetching coordinates:', err);
         }
       };
       fetchCoordinates();
@@ -41,7 +43,11 @@ function JobItem({ item }) {
     if (!file) return;
 
     // Check file type
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ];
     if (!allowedTypes.includes(file.type)) {
       setError('Invalid file type. Please upload a PDF or Word document.');
       setCvFile(null);
@@ -65,21 +71,43 @@ function JobItem({ item }) {
     }
   };
 
+  // Function to split the job description into paragraphs with up to 20 words each
+  const formatDescription = (description) => {
+    const words = description.split(' ');
+    const paragraphs = [];
+    for (let i = 0; i < words.length; i += 20) {
+      paragraphs.push(words.slice(i, i + 20).join(' '));
+    }
+    return paragraphs;
+  };
+
   return (
-    <div className='job-item'>
-      <div className='job-item-content'>
+    <div className="job-item">
+      <div className="job-item-content">
         <h3>{item.title}</h3>
-        <p className='job-item-description'><strong><u>Description:</u></strong> {item.description}</p>
-        <p><strong>Location:</strong> {item.location}</p>
+        <p>
+          <strong><u>Description:</u></strong>
+        </p>
+        <div className="job-item-description">
+          {formatDescription(item.description).map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+        <p><u><strong>Job Requirements:</strong></u></p>
+        <ul className="job-item-requirements">
+          {Array.isArray(item.requirements) && item.requirements.length > 0 ? (
+            item.requirements.map((req, index) => <li key={index}>{req}</li>)
+          ) : (
+            <li>Not specified</li>
+          )}
+        </ul>
+        <p><u><strong>Salary:</strong></u> {item.salary ? `${item.salary} ₪` : 'Not specified'}</p>
+        <p><u><strong>Location:</strong></u> {item.location}</p>
       </div>
 
       {mapCenter && (
-        <div className='job-item-map'>
-          <MapContainer
-            center={mapCenter}
-            zoom={12}
-            scrollWheelZoom={true}
-          >
+        <div className="job-item-map">
+          <MapContainer center={mapCenter} zoom={12} scrollWheelZoom={true}>
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -92,33 +120,42 @@ function JobItem({ item }) {
       )}
 
       {isAdmin && (
-        <div className='job-item-actions'>
-          <button className='btn btn-primary' onClick={() => {
-            setShowJobEdits(true);
-            setCurrentEditJob(item);
-          }}>Edit</button>
-          <button className='btn btn-danger' onClick={() => deleteJob(item._id)}>Delete</button>
+        <div className="job-item-actions">
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setShowJobEdits(true);
+              setCurrentEditJob(item);
+            }}
+          >
+            Edit
+          </button>
+          <button className="btn btn-danger" onClick={() => deleteJob(item._id)}>
+            Delete
+          </button>
         </div>
       )}
 
-      <div className='cv-upload'>
+      <div className="cv-upload">
         {!fileUploaded ? (
           <>
-            <label className='cv-upload-label'>
+            <label className="cv-upload-label">
               <input
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={handleFileChange}
                 className="cv-upload-input"
               />
-              <span className='cv-upload-button'>Upload CV</span>
+              <span className="cv-upload-button">Upload CV</span>
             </label>
-            {error && <p className='cv-upload-error'>{error}</p>} {/* Show error message */}
+            {error && <p className="cv-upload-error">{error}</p>} {/* Show error message */}
           </>
         ) : (
-          <div className='cv-upload-success'>
-            <p className='cv-upload-file-name'>Selected file: {cvFile.name}</p>
-            <button className='btn btn-success' onClick={handleSend}>Send</button>
+          <div className="cv-upload-success">
+            <p className="cv-upload-file-name">Selected file: {cvFile.name}</p>
+            <button className="btn btn-success" onClick={handleSend}>
+              Send
+            </button>
           </div>
         )}
       </div>

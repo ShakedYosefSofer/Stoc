@@ -18,6 +18,7 @@ const JobForm = () => {
   const [locationOptions, setLocationOptions] = useState([]);
   const [fetchError, setFetchError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCity, setSelectedCity] = useState(null);
   const { register, handleSubmit, control, formState: { errors } } = useForm();
   const navigate = useNavigate();
 
@@ -39,7 +40,7 @@ const JobForm = () => {
         }));
 
         setLocationOptions(cities);
-        setFetchError(null); 
+        setFetchError(null);
       } catch (err) {
         console.error('Error fetching cities:', err.message);
         setFetchError('Failed to load cities. Please try again later.');
@@ -76,7 +77,9 @@ const JobForm = () => {
     const bodyData = {
       title: data.title ? data.title.value : '',
       description: data.description,
-      location: data.location ? data.location.value : ''
+      requirements: data.requirements, // Add requirements field
+      salary: data.salary, // Add salary field
+      location: data.location ? data.location.value : '',
     };
 
     try {
@@ -85,11 +88,17 @@ const JobForm = () => {
       const response = await axios.post(url, bodyData);
       if (response.data._id) {
         alert('New job added successfully');
+        navigate('/jobs'); // Redirect after successful submission
       }
     } catch (err) {
       console.error('Error adding job:', err.response ? err.response.data : err.message);
       alert(`Error adding job: ${err.response ? err.response.data.error : err.message}`);
     }
+  };
+
+  // Update selected city when location is chosen
+  const handleCityChange = (selectedOption) => {
+    setSelectedCity(selectedOption);
   };
 
   return (
@@ -126,6 +135,22 @@ const JobForm = () => {
           {errors.description && <div className="text-danger">{errors.description.message}</div>}
         </div>
 
+        {/* Moved Requirements Field after Description */}
+        <div className="form-group">
+          <label htmlFor="requirements">Job Requirements</label>
+          <textarea
+            id="requirements"
+            {...register("requirements", { 
+              required: "Requirements are required", 
+              minLength: { value: 10, message: "Requirements must be at least 10 characters long" }
+            })}
+            className="form-control"
+            placeholder="Enter job requirements"
+          />
+          {errors.requirements && <div className="text-danger">{errors.requirements.message}</div>}
+        </div>
+
+        {/* Location Field at the End */}
         <div className="form-group">
           <label htmlFor="location">Location</label>
           <Controller
@@ -140,13 +165,12 @@ const JobForm = () => {
                 className="form-control"
                 placeholder="Select location"
                 isClearable
+                onChange={handleCityChange}
               />
             )}
           />
           {errors.location && <div className="text-danger">{errors.location.message}</div>}
         </div>
-
-        {fetchError && <div className="text-danger">{fetchError}</div>}
 
         <div className="button-group">
           <button type="submit" className="btn btn-primary">
@@ -156,11 +180,11 @@ const JobForm = () => {
       </form>
 
       {/* Display map for the selected city */}
-      {locationOptions.length > 0 && locationOptions[0].coordinates && (
+      {selectedCity && selectedCity.coordinates && (
         <div className="map-container">
-          <h3>Map of {locationOptions[0].label}</h3>
+          <h3>Map of {selectedCity.label}</h3>
           <img
-            src={`https://static-maps.openstreetmap.de/staticmap.php?center=${locationOptions[0].coordinates.lat},${locationOptions[0].coordinates.lon}&zoom=10&size=300x200&markers=${locationOptions[0].coordinates.lat},${locationOptions[0].coordinates.lon}`}
+            src={`https://static-maps.openstreetmap.de/staticmap.php?center=${selectedCity.coordinates.lat},${selectedCity.coordinates.lon}&zoom=10&size=300x200&markers=${selectedCity.coordinates.lat},${selectedCity.coordinates.lon}`}
             alt="Map"
           />
         </div>
