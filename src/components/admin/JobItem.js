@@ -71,9 +71,9 @@ function JobItem({ item }) {
     }
   };
 
-  // Function to split the job description into paragraphs with up to 20 words each
-  const formatDescription = (description) => {
-    const words = description.split(' ');
+  // Function to split text into paragraphs with up to 20 words
+  const formatText = (text) => {
+    const words = text.split(' ');
     const paragraphs = [];
     for (let i = 0; i < words.length; i += 20) {
       paragraphs.push(words.slice(i, i + 20).join(' '));
@@ -85,26 +85,40 @@ function JobItem({ item }) {
     <div className="job-item">
       <div className="job-item-content">
         <h3>{item.title}</h3>
-        <p>
-          <strong><u>Description:</u></strong>
-        </p>
+
+        {/* Job Description */}
+        <p><strong><u>Description:</u></strong></p>
         <div className="job-item-description">
-          {formatDescription(item.description).map((paragraph, index) => (
+          {formatText(item.description).map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
         </div>
+
+        {/* Job Requirements */}
         <p><u><strong>Job Requirements:</strong></u></p>
-        <ul className="job-item-requirements">
+        <div className="job-item-requirements">
           {Array.isArray(item.requirements) && item.requirements.length > 0 ? (
-            item.requirements.map((req, index) => <li key={index}>{req}</li>)
+            item.requirements.map((req, index) => (
+              <div key={index}>
+                {formatText(req).map((paragraph, subIndex) => (
+                  <p key={subIndex}>{paragraph}</p>
+                ))}
+              </div>
+            ))
           ) : (
-            <li>Not specified</li>
+            <p>Not specified</p> // הצגת הודעה אם אין דרישות או אם זה לא מערך
           )}
-        </ul>
+        </div>
+
+
+        {/* Salary */}
         <p><u><strong>Salary:</strong></u> {item.salary ? `${item.salary} ₪` : 'Not specified'}</p>
+
+        {/* Location */}
         <p><u><strong>Location:</strong></u> {item.location}</p>
       </div>
 
+      {/* Map */}
       {mapCenter && (
         <div className="job-item-map">
           <MapContainer center={mapCenter} zoom={12} scrollWheelZoom={true}>
@@ -119,6 +133,7 @@ function JobItem({ item }) {
         </div>
       )}
 
+      {/* Admin Actions */}
       {isAdmin && (
         <div className="job-item-actions">
           <button
@@ -136,6 +151,7 @@ function JobItem({ item }) {
         </div>
       )}
 
+      {/* CV Upload */}
       <div className="cv-upload">
         {!fileUploaded ? (
           <>
