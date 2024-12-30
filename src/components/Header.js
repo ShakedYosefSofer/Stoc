@@ -58,7 +58,13 @@ export default function Header() {
               <li><Link to="/FormSignUp">SignUp</Link></li>
               <li><Link to="/Login">Login</Link></li>
               <li><Link to="/Admin">Admin</Link></li>
-              <li className="home-icon"><Link to="/"><BsFillHouseDoorFill size={20}/></Link></li>
+              <li className="home-icon">
+              <Link 
+                to="/" 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                <BsFillHouseDoorFill size={20} />
+              </Link>
+            </li>            
             </ul>
           </nav>
         </div>

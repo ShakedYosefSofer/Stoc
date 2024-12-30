@@ -70,7 +70,9 @@ header {
     .container-fluid{
         width: 100%;
     }
+    
     .home-icon {
+      direction: ltr;
         display: inline-flex; /* מרכזת את האייקון */
         align-items: center; /* ממקמת את האייקון במרכז אנכי */
         width: 65px; /* הגדרת גודל הקופסה */

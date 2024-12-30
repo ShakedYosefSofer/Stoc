@@ -112,10 +112,10 @@ function JobItem({ item }) {
 
 
         {/* Salary */}
-        <p><u><strong>Salary:</strong></u> {item.salary ? `${item.salary} ₪` : 'Not specified'}</p>
+        {/* <p><u><strong>Salary:</strong></u> {item.salary ? `${item.salary} ₪` : 'Not specified'}</p> */}
 
         {/* Location */}
-        <p><u><strong>Location:</strong></u> {item.location}</p>
+        <p><u><strong>Location:</strong></u><br/><br/> {item.location}</p>
       </div>
 
       {/* Map */}

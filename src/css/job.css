@@ -5,6 +5,7 @@ body {
   color: #333;
   margin: 0;
   padding: 0;
+  direction:rtl;
 }
 
 .container {
@@ -237,5 +238,4 @@ body {
   height: 300px; /* לדוגמה, גובה מתאים למפה */
   border: 1px solid #ddd; /* מסגרת מסביב למפה */
   border-radius: 5px;
-  margin-top: 20px;
 }
