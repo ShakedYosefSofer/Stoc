@@ -1,0 +1,46 @@
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .card {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .form-container {
+    padding: 20px;
+  }
+  
+  .form-control {
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+  }
+  
+  .form-control:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .btn {
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .text-danger {
+    font-size: 14px;
+    color: #dc3545;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1.5rem;
+  }
+  

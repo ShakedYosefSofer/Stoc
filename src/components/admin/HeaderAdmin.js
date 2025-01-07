@@ -40,8 +40,6 @@ export default function HeaderAdmin() {
             <ul>
               <li><Link to="/admin/users">Users</Link></li>
               <li><Link to="/admin/JobsAdmin">Jobs</Link></li>
-              
-           
             </ul>
             <div>
               {/* אם לא מזהה קוקיס, לא יציג את כפתור ההתנתקות */}
