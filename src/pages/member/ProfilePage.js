@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import EditProfile from '../../components/member/EditProfile'; // ייבוא של הקומפוננטה EditProfile
-
-
-
-
+import { API_URL } from '../../services/apiService';
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -18,8 +15,13 @@ export default function ProfilePage() {
     const fetchUserDetails = async () => {
       if (cookies.token) {
         try {
-          const response = await axios.get('/api/userProfile', { withCredentials: true });
-          setUser(response.data);
+          const response = await axios.get(API_URL+'/api/userProfile', { withCredentials: true });
+          
+          if (response.data) {
+            setUser(response.data); // אם יש נתונים, שמור אותם
+          } else {
+            console.error('No user data received');
+          }
         } catch (error) {
           console.error('Error fetching user details:', error);
         }
@@ -31,7 +33,7 @@ export default function ProfilePage() {
   // הצגת פרטי המשתמש או קומפוננטת עריכה אם אנחנו במצב עריכה
   return (
     <div className="container">
-      <h1>Profile Page</h1>
+      <h1>Setting</h1>
       {user ? (
         isEditing ? (
           <EditProfile user={user} setIsEditing={setIsEditing} />

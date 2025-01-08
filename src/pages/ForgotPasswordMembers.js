@@ -1,5 +1,5 @@
 import React from 'react';
-import ForgotPassMembers from '../components/ForgotPassMember';
+import ForgotPassMembers from '../components/member/ForgotPassMember';
 
 export default function ForgotPasswordMembers() {
   return (

@@ -2,9 +2,9 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { API_URL } from '../../services/apiService';
 import axios from 'axios';
-import '../css/forgotPassMembers'; // עיצוב מותאם אישית
+import '../../css/forgotPassMembers.css';
 
-export default function ForgotPassMembers() {
+export default function ForgotPassMember() {
   const { register, handleSubmit, formState: { errors }, getValues, reset } = useForm();
 
   const checkEmailExists = async (email) => {

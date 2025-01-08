@@ -16,6 +16,7 @@ import LoginPage from "./pages/LoginPage";
 import PostJob from "./pages/member/PostJob";
 import ProfilePage from "./pages/member/ProfilePage";
 import MyJobsPage from "./pages/member/MyJobsPage";
+import ForgotPasswordMembers from "./pages/ForgotPasswordMembers";
 
 
 function App() {
@@ -36,9 +37,10 @@ function App() {
          
           <Route path="/FormSignUp" element={<FormSignUp />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/ForgotPasswordMembers" element={<ForgotPasswordMembers />} />
          
           <Route path="/PostJob" element={<PostJob  />} />
-          <Route path="/Profile" element={<ProfilePage  />} />
+          <Route path="/ProfilePage" element={<ProfilePage  />} />
           <Route path="/MyJobs" element={<MyJobsPage  />} />
 
             {/* admin pages */}

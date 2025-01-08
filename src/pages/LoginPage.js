@@ -1,14 +1,41 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../services/apiService';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
+import { useCookies } from 'react-cookie'; // הייבוא של useCookies
 
 export default function LoginPage() {
   const nav = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
+
+  // שימוש ב-useCookies לאחסון קריאות קוקיז
+  const [cookies, setCookie] = useCookies(['token']);
+
+  // בדיקה אם יש טוקן בעוגיות
+  useEffect(() => {
+    if (cookies.token) {
+      // אם יש טוקן, נוודא שהמשתמש הוא "user" ולא "admin"
+      const checkUserRole = async () => {
+        try {
+          const response = await axios.get(`${API_URL}/users/userName`, { 
+            withCredentials: true 
+          });
+
+          // אם המשתמש הוא אדמין, לא נעשה כלום
+          if (response.data.role === 'admin') {
+            return; // שום דבר לא קורה אם המשתמש הוא אדמין
+          } else {
+            nav('/'); // אם הוא יוזר, נווט לדף הבית של היוזר
+          }
+        } catch (error) {
+          console.error('Error verifying user role:', error);
+        }
+      };
+      checkUserRole();
+    }
+  }, [cookies.token, nav]);
 
   const onSub = async (e) => {
     e.preventDefault();
@@ -18,7 +45,7 @@ export default function LoginPage() {
     };
 
     try {
-      // מאפשר לשמור קוקיס דרך axios
+      // מאפשר לשמור קוקיז דרך axios
       axios.defaults.withCredentials = true;
 
       // בקשת אקסיוס עם מתודת POST
@@ -28,16 +55,15 @@ export default function LoginPage() {
         data: bodyData,
       });
 
-      // בדיקה שהמשתמש הוא user בלבד
-      if (data.role !== 'user') {
-        return alert('Access restricted to users only!');
+      // בדיקה אם המשתמש הוא "user"
+      if (data.role === 'admin') {
+        return alert('Admin cannot log in here.'); // הצגת הודעה אם מדובר באדמין
       }
 
       console.log(data);
 
-      // שמירת הטוקן ושם המשתמש בקוקי
-      Cookies.set('token', data.token);
-      Cookies.set('userName', data.name);
+      // שמירת הטוקן בקוקיז
+      setCookie('token', data.token, { path: '/' });
 
       // נווט לדף הבית של היוזר
       nav('/');
@@ -56,7 +82,8 @@ export default function LoginPage() {
         <label>Password:</label>
         <input ref={passwordRef} type="password" className='form-control' required />
         <button className='btn btn-success mt-3'>Log in</button>
-        <Link to="/user/ForgotPassword" className="btn btn-link mt-2"> Forgot Password?</Link>
+
+        <Link to="/ForgotPasswordMembers" className="btn btn-link mt-2"> Forgot Password?</Link>
       </form>
     </div>
   );

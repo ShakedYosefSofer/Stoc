@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { API_URL } from '../../services/apiService';
 
 export default function UserGreeting() {
   const navigate = useNavigate();
@@ -17,8 +18,8 @@ export default function UserGreeting() {
       // בקשה לקבלת שם המשתמש
       const fetchUserName = async () => {
         try {
-          const response = await axios.get('/api/userName', { withCredentials: true });
-          setUserName(response.data.userName || 'User');
+          const response = await axios.get(API_URL+'/users/userName', { withCredentials: true });
+          setUserName(response.data.userName || 'anonymous');
         } catch (error) {
           console.error('Error fetching user name:', error);
           setUserName('User');
@@ -92,7 +93,7 @@ export default function UserGreeting() {
                 </li>
                 <li
                   style={{ cursor: 'pointer', padding: '8px 0' }}
-                  onClick={() => handleNavigation('/profile')}
+                  onClick={() => handleNavigation('/ProfilePage')}
                 >
                   Profile
                 </li>

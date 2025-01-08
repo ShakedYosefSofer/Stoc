@@ -51,19 +51,23 @@ export default function PostJob() {
     const bodyData = {
       title: data.title?.value || '',
       description: data.description,
-      location: data.location?.value || '',
       requirements: data.requirements,
-      salary: data.salary,
-      userId,
+      location: data.location?.value || '',
+      userId,  // יכול להיות מיותר אם אתה שולח את ה-userId ישירות מהשרת
     };
-
+  
     try {
+      const token = localStorage.getItem('x-auth-token');  // שלוף את הטוקן מה-localStorage
+      const headers = {
+        'x-auth-token': token  // שלח את הטוקן ככותרת בבקשה
+      };
+      
       const url = 'http://localhost:3001/jobs';
-      const { data: responseData } = await axios.post(url, bodyData);
+      const { data: responseData } = await axios.post(url, bodyData, { headers });
       if (responseData._id) {
         alert("New job added successfully!");
         addJob(responseData);
-        navigate("/admin/JobsAdmin");
+        // navigate("/admin/JobsAdmin");
       }
     } catch (err) {
       console.error('Error adding job:', err);
@@ -71,6 +75,7 @@ export default function PostJob() {
     }
   };
 
+  
   return (
     <div className='container'>
       <h1>Post a Job</h1>
