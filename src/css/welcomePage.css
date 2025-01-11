@@ -1,0 +1,85 @@
+/* Container */
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 84.7vh; 
+    width: 100%; /* להבטיח שכל הרוחב מלא */
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    overflow: hidden;
+    padding: 0 20px;
+    /* border-radius: 20px; להוסיף עיגול קל לפינות */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* להוסיף צל לתחושה מקצועית */
+  }
+  
+  /* Message Styling */
+  .welcome-message h2 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #fff;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    animation: slideIn 2s ease-in-out; /* זמן אנימציה 2 שניות */
+  }
+  
+  .welcome-message h2 span {
+    color: #ffdd57;
+    text-shadow: 2px 2px 10px rgba(255, 221, 87, 0.7);
+  }
+  
+  .welcome-message p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    max-width: 600px;
+    margin: 0 auto;
+    opacity: 0.9;
+  }
+  
+  /* Button Styling */
+  .welcome-message .cta-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #ffdd57;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .welcome-message .cta-button:hover {
+    background: #ffd700;
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  

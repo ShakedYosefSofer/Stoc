@@ -27,7 +27,7 @@ export default function LoginPage() {
           if (response.data.role === 'admin') {
             return; // שום דבר לא קורה אם המשתמש הוא אדמין
           } else {
-            nav('/'); // אם הוא יוזר, נווט לדף הבית של היוזר
+            nav('/member'); // אם הוא יוזר, נווט לדף הבית של היוזר
           }
         } catch (error) {
           console.error('Error verifying user role:', error);
@@ -55,18 +55,15 @@ export default function LoginPage() {
         data: bodyData,
       });
 
-      // בדיקה אם המשתמש הוא "user"
-      if (data.role === 'admin') {
-        return alert('Admin cannot log in here.'); // הצגת הודעה אם מדובר באדמין
-      }
+   
 
       console.log(data);
 
       // שמירת הטוקן בקוקיז
-      setCookie('token', data.token, { path: '/' });
+      setCookie('token', data.token, { path: '/',  } );
 
       // נווט לדף הבית של היוזר
-      nav('/');
+      nav('/member');
     } catch (error) {
       alert('Password or email not match');
       console.log(error);

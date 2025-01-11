@@ -9,6 +9,7 @@ export default function ContextProvider(props) {
   const [showJobEdits, setShowJobEdits] = useState(false);
   const [currentEditJob, setCurrentEditJob] = useState({});
   const [currentCategory, setCurrentCategory] = useState(""); // קטגוריה נוכחית
+  
 
   // פונקציה לטעינת עבודות מהשרת (עם או בלי קטגוריה)
   const fetchJobs = async (category = "") => {
@@ -65,12 +66,14 @@ export default function ContextProvider(props) {
     }
   };
 
+  
   const globalValue = {
     job_ar, fetchJobs,
     addJob, deleteJob, updateJob,
     showJobEdits, setShowJobEdits,
     currentEditJob, setCurrentEditJob,
     currentCategory, setCurrentCategory // קטגוריה נוכחית לניהול
+
   };
 
   return (

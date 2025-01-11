@@ -63,7 +63,6 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
       title: data.title ? data.title.value : '',
       description: data.description,
       requirements: data.requirements,
-      salary: data.salary,
       location: data.location ? data.location.value : '',
     };
 
@@ -129,21 +128,6 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
               placeholder="Enter job requirements"
             />
             {errors.requirements && <div className="text-danger">{errors.requirements.message}</div>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="salary">Salary</label>
-            <input
-              id="salary"
-              type="number"
-              {...register("salary", {
-                required: "Salary is required",
-                min: { value: 0, message: "Salary must be a positive number" }
-              })}
-              className="form-control"
-              placeholder="Enter salary"
-            />
-            {errors.salary && <div className="text-danger">{errors.salary.message}</div>}
           </div>
 
           <div className="form-group">

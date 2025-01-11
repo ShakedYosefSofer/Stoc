@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
+import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../services/apiService';
+import '../../css/userGreeting.css'; // Import the external CSS file
 
 export default function UserGreeting() {
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('Guest');
-  const [showMenu, setShowMenu] = useState(false); // מצב תפריט נפתח
-  const token = Cookies.get('token'); // קבלת הטוקן מהעוגיות
+  const [showMenu, setShowMenu] = useState(false);
+
+  const token = cookies.token;
 
   useEffect(() => {
     if (token) {
       setIsLoggedIn(true);
 
-      // בקשה לקבלת שם המשתמש
       const fetchUserName = async () => {
         try {
-          const response = await axios.get(API_URL+'/users/userName', { withCredentials: true });
+          const response = await axios.get(`${API_URL}/users/userName`, {
+            withCredentials: true,
+          });
+          console.log('Response:', response); // To see the response
           setUserName(response.data.userName || 'anonymous');
         } catch (error) {
           console.error('Error fetching user name:', error);
@@ -31,15 +36,14 @@ export default function UserGreeting() {
   }, [token]);
 
   const handleLogout = () => {
-    // מחיקת הטוקן מהעוגיות והתנתקות
-    Cookies.remove('token');
+    removeCookie('token', { path: '/' });
     setIsLoggedIn(false);
     navigate('/login');
   };
 
   const handleNavigation = (path) => {
     navigate(path);
-    setShowMenu(false); // סגור את התפריט לאחר לחיצה
+    setShowMenu(false);
   };
 
   const toggleMenu = () => {
@@ -47,65 +51,20 @@ export default function UserGreeting() {
   };
 
   return (
-    <div style={{ position: 'relative', padding: '10px' }}>
+    <div className="greeting-container">
       {isLoggedIn ? (
         <div>
-          <span
-            onClick={toggleMenu}
-            style={{ cursor: 'pointer', fontWeight: 'bold' }}
-          >
+          <span onClick={toggleMenu} className="greeting-text">
             Hello, {userName}
           </span>
 
           {showMenu && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '40px',
-                right: '0',
-                background: '#fff',
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                zIndex: 10,
-                width: '150px',
-              }}
-            >
-              <ul
-                style={{
-                  listStyleType: 'none',
-                  padding: '10px',
-                  margin: 0,
-                  textAlign: 'left',
-                }}
-              >
-                <li
-                  style={{ cursor: 'pointer', padding: '8px 0' }}
-                  onClick={() => handleNavigation('/MyJobs')}
-                >
-                  My Jobs
-                </li>
-                <li
-                  style={{ cursor: 'pointer', padding: '8px 0' }}
-                  onClick={() => handleNavigation('/PostJob')}
-                >
-                  Post a Job
-                </li>
-                <li
-                  style={{ cursor: 'pointer', padding: '8px 0' }}
-                  onClick={() => handleNavigation('/ProfilePage')}
-                >
-                  Profile
-                </li>
-                <li
-                  style={{
-                    cursor: 'pointer',
-                    padding: '8px 0',
-                    color: 'red',
-                    fontWeight: 'bold',
-                  }}
-                  onClick={handleLogout}
-                >
+            <div className="menu-container">
+              <ul className="menu-list">
+                <li onClick={() => handleNavigation('/member/MyJobs')}>My Jobs</li>
+                <li onClick={() => handleNavigation('/member/PostJob')}>Post a Job</li>
+                <li onClick={() => handleNavigation('/member/ProfilePage')}>Profile</li>
+                <li className="logout" onClick={handleLogout}>
                   Log Out
                 </li>
               </ul>

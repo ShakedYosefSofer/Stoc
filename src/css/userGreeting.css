@@ -1,0 +1,45 @@
+/* Container for the greeting text */
+.greeting-container {
+    position: relative;
+    padding: 10px;
+    text-align: left; /* Align text to the right for RTL */
+  }
+  
+  /* Styling for the greeting text */
+  .greeting-text {
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  /* Menu container styling */
+  .menu-container {
+    position: absolute;
+    top: 40px;
+    left: 0; /* Position the menu to the left */
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    width: 150px;
+  }
+  
+  /* Menu list styling */
+  .menu-list {
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+    text-align: right; /* Ensure the menu is RTL */
+  }
+  
+  .menu-list li {
+    cursor: pointer;
+    padding: 8px 0;
+  }
+  
+  /* Styling for the logout option */
+  .logout {
+    color: red;
+    font-weight: bold;
+  }
+  

@@ -1,4 +1,3 @@
-// PostJob Component
 import React, { useEffect, useState, useContext } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import axios from 'axios';
@@ -6,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import { AppContext } from '../../context/Context';
 import '../../css/job.css';
+import { API_URL } from '../../services/apiService';
 
 const jobOptions = [
   { value: 'developer', label: 'Developer' },
@@ -13,6 +13,7 @@ const jobOptions = [
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
   { value: 'cyber', label: 'Cyber' },
+  // { value: 'ai', label: 'Ai' },
 ];
 
 export default function PostJob() {
@@ -21,19 +22,20 @@ export default function PostJob() {
   const [locationOptions, setLocationOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
-  const { addJob } = useContext(AppContext);
+  const { addJob } = useContext(AppContext); // הוספת userId מהקונטקסט
+  const url = `${API_URL}/jobs`;
 
-  const userId = localStorage.getItem("userId");
+  // קבלת ה-userId מהקונטקסט או localStorage
+  const userId = useContext(AppContext)?.user?.id || localStorage.getItem("userId") || null;
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/jobs/cities');
+        const response = await axios.get(`${API_URL}/jobs/cities`);
         const cities = response.data.map(city => ({
           value: city.value,
           label: city.label
         }));
-
         setLocationOptions(cities);
         setFetchError(null);
       } catch (err) {
@@ -48,34 +50,42 @@ export default function PostJob() {
   }, []);
 
   const onSubmit = async (data) => {
+    if (!userId) {
+      alert("Error: You must be logged in to post a job.");
+      navigate("/login");
+      return;
+    }
+
     const bodyData = {
       title: data.title?.value || '',
       description: data.description,
       requirements: data.requirements,
       location: data.location?.value || '',
-      userId,  // יכול להיות מיותר אם אתה שולח את ה-userId ישירות מהשרת
+      userId, // הוספת userId
     };
-  
+
     try {
-      const token = localStorage.getItem('x-auth-token');  // שלוף את הטוקן מה-localStorage
-      const headers = {
-        'x-auth-token': token  // שלח את הטוקן ככותרת בבקשה
-      };
-      
-      const url = 'http://localhost:3001/jobs';
-      const { data: responseData } = await axios.post(url, bodyData, { headers });
-      if (responseData._id) {
+      const response = await axios.post(url, bodyData, {
+        withCredentials: true, // חשוב לשלוח עוגיות עם הבקשה
+      });
+
+      if (response.data._id) {
         alert("New job added successfully!");
-        addJob(responseData);
-        // navigate("/admin/JobsAdmin");
+        addJob(response.data); // הוסף את המשרה לקונטקסט
+        navigate("/");
       }
     } catch (err) {
-      console.error('Error adding job:', err);
-      alert(`Error adding job: ${err.response?.data?.message || err.message}`);
+      if (err.response?.status === 401) {
+        alert("Please login to post a job.");
+        navigate("/login");
+      } else if (err.response?.status === 403) {
+        alert("Access denied: Only admins can post jobs.");
+      } else {
+        alert(`Error adding job: ${err.response?.data?.err || err.message}`);
+      }
     }
   };
 
-  
   return (
     <div className='container'>
       <h1>Post a Job</h1>

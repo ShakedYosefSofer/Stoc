@@ -77,7 +77,7 @@ export default function Header() {
               <li><Link to="/Admin">Admin</Link></li>
               <li className="home-icon">
                 <Link 
-                  to="/" 
+                  to="/member" 
                   onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                   <BsFillHouseDoorFill size={20} />
                 </Link>

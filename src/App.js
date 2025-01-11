@@ -17,7 +17,7 @@ import PostJob from "./pages/member/PostJob";
 import ProfilePage from "./pages/member/ProfilePage";
 import MyJobsPage from "./pages/member/MyJobsPage";
 import ForgotPasswordMembers from "./pages/ForgotPasswordMembers";
-
+import WelcomePage from "./pages/member/WelcomePage";
 
 function App() {
 
@@ -33,15 +33,18 @@ function App() {
           <Route path="*" element={<Header />} />
         </Routes>
         <Routes>
+
+        {/*anonimus pages */} 
           <Route path="/" element={<JobPage  />} />
-         
           <Route path="/FormSignUp" element={<FormSignUp />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/ForgotPasswordMembers" element={<ForgotPasswordMembers />} />
          
-          <Route path="/PostJob" element={<PostJob  />} />
-          <Route path="/ProfilePage" element={<ProfilePage  />} />
-          <Route path="/MyJobs" element={<MyJobsPage  />} />
+          {/* member pages */}
+          <Route path="/member" element={<WelcomePage  />} />
+          <Route path="/member/PostJob" element={<PostJob  />} />
+          <Route path="/member/ProfilePage" element={<ProfilePage  />} />
+          <Route path="/member/MyJobs" element={<MyJobsPage  />} />
 
             {/* admin pages */}
             <Route path="/admin" element={<LoginAdmin />} />
