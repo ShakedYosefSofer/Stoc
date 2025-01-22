@@ -13,7 +13,6 @@ const jobOptions = [
   { value: 'qa', label: 'QA' },
   { value: 'designer', label: 'Designer' },
   { value: 'cyber', label: 'Cyber' },
-  // { value: 'ai', label: 'Ai' },
 ];
 
 export default function PostJob() {
@@ -22,21 +21,17 @@ export default function PostJob() {
   const [locationOptions, setLocationOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
-  const { addJob } = useContext(AppContext); // הוספת userId מהקונטקסט
-  const url = `${API_URL}/jobs`;
-
-  // קבלת ה-userId מהקונטקסט או localStorage
-  const userId = useContext(AppContext)?.user?.id || localStorage.getItem("userId") || null;
+  const { user } = useContext(AppContext);
+  const userId = user?.id || localStorage.getItem("userId") || null;
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const response = await axios.get(`${API_URL}/jobs/cities`);
-        const cities = response.data.map(city => ({
+        setLocationOptions(response.data.map(city => ({
           value: city.value,
           label: city.label
-        }));
-        setLocationOptions(cities);
+        })));
         setFetchError(null);
       } catch (err) {
         console.error('Error fetching cities:', err.message);
@@ -50,39 +45,26 @@ export default function PostJob() {
   }, []);
 
   const onSubmit = async (data) => {
-    if (!userId) {
-      alert("Error: You must be logged in to post a job.");
-      navigate("/login");
-      return;
-    }
-
     const bodyData = {
       title: data.title?.value || '',
       description: data.description,
       requirements: data.requirements,
       location: data.location?.value || '',
-      userId, // הוספת userId
+      userId,
     };
 
     try {
-      const response = await axios.post(url, bodyData, {
-        withCredentials: true, // חשוב לשלוח עוגיות עם הבקשה
+      const response = await axios.post(`${API_URL}/jobs`, bodyData, {
+        withCredentials: true,
       });
 
       if (response.data._id) {
         alert("New job added successfully!");
-        addJob(response.data); // הוסף את המשרה לקונטקסט
         navigate("/");
       }
     } catch (err) {
-      if (err.response?.status === 401) {
-        alert("Please login to post a job.");
-        navigate("/login");
-      } else if (err.response?.status === 403) {
-        alert("Access denied: Only admins can post jobs.");
-      } else {
-        alert(`Error adding job: ${err.response?.data?.err || err.message}`);
-      }
+      console.error('Error adding job:', err);
+      alert(`Error adding job: ${err.response ? JSON.stringify(err.response.data) : err.message}`);
     }
   };
 
@@ -113,12 +95,12 @@ export default function PostJob() {
         <div className="form-group">
           <label>Description</label>
           <input
-            {...register("description", { required: true, minLength: 5 })}
+            {...register("description", { required: "Description is required", minLength: { value: 5, message: "Description must be at least 5 characters long" } })}
             className="form-control"
             placeholder="Enter job description"
             type="text"
           />
-          {errors.description && <div className="text-danger">* Enter a valid description</div>}
+          {errors.description && <div className="text-danger">{errors.description.message}</div>}
         </div>
 
         <div className="form-group">
@@ -159,7 +141,7 @@ export default function PostJob() {
           )}
           {errors.location && <div className="text-danger">{errors.location.message}</div>}
         </div>
-        <button className='btn btn-success mt-4'>Add Job</button>
+        <button type="submit" className='btn btn-success mt-4'>Add Job</button>
       </form>
     </div>
   );
