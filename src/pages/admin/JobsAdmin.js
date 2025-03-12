@@ -56,13 +56,12 @@ export default function JobsAdmin() {
       <table className='table table-striped'>
         <thead>
           <tr>
-            <td>#</td>
-            <td>Title</td>
-            <td>Description</td>
-            <td>Requirements</td> {/* הוספת שדה דרישות המשרה */}
-            <td>Salary</td>
-            <td>Location</td>
-            <td>Del/Edit</td>
+            <th>#</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Requirements</th>
+            <th>Location</th>
+            <th>Del/Edit</th>
           </tr>
         </thead>
         <tbody>
@@ -71,15 +70,13 @@ export default function JobsAdmin() {
               <td>{i + 1}</td>
               <td>{item.title}</td>
               <td>{item.description}</td>
-              <td>{item.requirements}</td> {/* הצגת דרישות המשרה */}
-              <td>{item.salary}</td>
+              <td>{item.requirements}</td>
               <td>{item.location}</td>
               <td>
                 <button
                   onClick={() => {
                     if (window.confirm("Delete job?")) {
                       deleteItem(item._id);
-                      window.location.reload(); 
                     }
                   }}
                   className='btn btn-danger'

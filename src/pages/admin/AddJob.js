@@ -3,7 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
-import '../../css/job.css'; // ודא שהקובץ קיים ומכיל את העיצובים המתאימים
+import '../../css/job.css';
 
 const jobOptions = [
   { value: 'developer', label: 'Developer' },
@@ -14,50 +14,52 @@ const jobOptions = [
 ];
 
 export default function AddJob() {
-  const { register, handleSubmit, control, formState: { errors } } = useForm();
+  const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm();
   const navigate = useNavigate();
-  const [locationOptions, setLocationOptions] = useState([]); // סטייט עבור הערים
-  const [isLoading, setIsLoading] = useState(true); // סטייט עבור טוען
-  const [fetchError, setFetchError] = useState(null); // סטייט עבור שגיאות טעינה
+  const [locationOptions, setLocationOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/jobs/cities'); // עדכון לשרת בפורט 3001
-
-        const cities = response.data.map(city => ({
-          value: city.value,
-          label: city.label // ודא שהנתונים מכילים את המידע הנדרש
-        }));
-
-        setLocationOptions(cities); // עדכון הערים
-        setFetchError(null); 
+        const response = await axios.get('http://localhost:3001/jobs/cities');
+        if (response.data && Array.isArray(response.data)) {
+          const cities = response.data.map(city => ({
+            value: city.value,
+            label: city.label
+          }));
+          setLocationOptions(cities);
+        } else {
+          setFetchError("Invalid data format received");
+        }
       } catch (err) {
         console.error('Error fetching cities:', err.message);
         setFetchError('Failed to load cities. Please try again later.');
       } finally {
-        setIsLoading(false); // סיום הטעינה
+        setIsLoading(false);
       }
     };
 
-    fetchCities(); // קריאה לפונקציה ב- useEffect
-  }, []); // ריקון של מערך התלויות כדי להריץ רק פעם אחת לאחר טעינת הרכיב
+    fetchCities();
+  }, []);
 
   const onSubmit = async (data) => {
+    if (isSubmitting) return;
+
     const bodyData = {
       title: data.title ? data.title.value : '',
       description: data.description,
       location: data.location ? data.location.value : '',
-      requirements: data.requirements, // דרישות המשרה
-      salary: data.salary, // הוספת משכורת
+      requirements: data.requirements,
     };
 
     try {
-      const url = 'http://localhost:3001/jobs'; // עדכון לשרת בפורט 3001
+      const url = 'http://localhost:3001/jobs';
       const { data: responseData } = await axios.post(url, bodyData);
       if (responseData._id) {
         alert("New job added");
-        navigate("/admin/JobsAdmin"); // ניווט לאחר הצלחה
+        navigate("/admin/JobsAdmin");
       }
     } catch (err) {
       console.error('Error adding job:', err);
@@ -91,25 +93,18 @@ export default function AddJob() {
 
         <div className="form-group">
           <label>Description</label>
-          <input
-            {...register("description", { required: true, minLength: 5 })}
+          <textarea
+            {...register("description", { required: "Description is required", minLength: 5 })}
             className="form-control"
             placeholder="Enter job description"
-            type="text"
           />
-          {errors.description && <div className="text-danger">* Enter a valid description</div>}
+          {errors.description && <div className="text-danger">{errors.description.message}</div>}
         </div>
 
-        
-
-        {/* New Requirements Field */}
         <div className="form-group">
           <label>Job Requirements</label>
           <textarea
-            {...register("requirements", { 
-              required: "Requirements are required", 
-              minLength: { value: 10, message: "Requirements must be at least 10 characters long" }
-            })}
+            {...register("requirements", { required: "Requirements are required", minLength: 10 })}
             className="form-control"
             placeholder="Enter job requirements"
           />
@@ -119,9 +114,9 @@ export default function AddJob() {
         <div className="form-group">
           <label>Location</label>
           {isLoading ? (
-            <p>Loading cities...</p> // הודעה בזמן טעינה
+            <p>Loading cities...</p>
           ) : fetchError ? (
-            <p className="text-danger">{fetchError}</p> // הודעת שגיאה אם קרתה
+            <p className="text-danger">{fetchError}</p>
           ) : (
             <Controller
               name="location"
@@ -131,7 +126,7 @@ export default function AddJob() {
               render={({ field }) => (
                 <Select
                   {...field}
-                  options={locationOptions} // הערים שהורדו מה-API
+                  options={locationOptions}
                   className="form-control"
                   placeholder="Select location"
                   isClearable
@@ -142,7 +137,9 @@ export default function AddJob() {
           {errors.location && <div className="text-danger">{errors.location.message}</div>}
         </div>
 
-        <button className='btn btn-success mt-4'>Add</button>
+        <button className='btn btn-success mt-4' disabled={isSubmitting}>
+          {isSubmitting ? "Adding..." : "Add"}
+        </button>
       </form>
     </div>
   );
