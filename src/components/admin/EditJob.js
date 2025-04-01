@@ -21,7 +21,6 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
       title: jobOptions.find(option => option.value === currentEditItem.title) || null,
       description: currentEditItem.description,
       requirements: currentEditItem.requirements || '',
-      salary: currentEditItem.salary || '',
       location: null, // Updated after cities are loaded
    
     }
@@ -62,10 +61,10 @@ export default function EditJobAdmin({ setShowEdit, currentEditItem, doApi }) {
     const bodyData = {
       title: data.title ? data.title.value : '',
       description: data.description,
-      requirements: data.requirements,
+      requirements: data.requirements ? data.requirements.split('\n') : [], // ✅ ממיר למערך
       location: data.location ? data.location.value : '',
     };
-
+  
     try {
       const url = `${API_URL}/jobs/${currentEditItem._id}`;
       axios.defaults.withCredentials = true;
