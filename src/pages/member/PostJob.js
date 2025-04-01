@@ -15,6 +15,9 @@ const jobOptions = [
   { value: 'cyber', label: 'Cyber' },
 ];
 
+// ברירת מחדל של תל אביב אם אין חיבור או לא נבחרה עיר
+const DEFAULT_CITY = { value: 'tel-aviv', label: 'Tel Aviv' };
+
 export default function PostJob() {
   const { register, handleSubmit, control, formState: { errors } } = useForm();
   const navigate = useNavigate();
@@ -35,7 +38,8 @@ export default function PostJob() {
         setFetchError(null);
       } catch (err) {
         console.error('Error fetching cities:', err.message);
-        setFetchError('Failed to load cities. Please try again later.');
+        setFetchError('Failed to load cities. Defaulting to Tel Aviv.');
+        setLocationOptions([DEFAULT_CITY]); // במקרה של שגיאה, רק תל אביב
       } finally {
         setIsLoading(false);
       }
@@ -49,7 +53,7 @@ export default function PostJob() {
       title: data.title?.value || '',
       description: data.description,
       requirements: data.requirements,
-      location: data.location?.value || '',
+      location: data.location?.value || DEFAULT_CITY.value, // אם לא נבחרה עיר, ברירת מחדל תל אביב
       userId,
     };
 
@@ -95,7 +99,10 @@ export default function PostJob() {
         <div className="form-group">
           <label>Description</label>
           <input
-            {...register("description", { required: "Description is required", minLength: { value: 5, message: "Description must be at least 5 characters long" } })}
+            {...register("description", { 
+              required: "Description is required", 
+              minLength: { value: 5, message: "Description must be at least 5 characters long" } 
+            })}
             className="form-control"
             placeholder="Enter job description"
             type="text"
@@ -126,8 +133,7 @@ export default function PostJob() {
             <Controller
               name="location"
               control={control}
-              defaultValue={null}
-              rules={{ required: "Location is required" }}
+              defaultValue={DEFAULT_CITY} // ברירת מחדל תל אביב
               render={({ field }) => (
                 <Select
                   {...field}
